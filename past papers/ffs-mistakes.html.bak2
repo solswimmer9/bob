@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FFS - Frequent Failed Skills</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="past-papers.css">
+</head>
+<body>
+    <div class="ffs-container">
+        <a href="chemistry-tracker.html" class="back-btn">
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 8px;
+            transition: var(--transition);
+            margin-bottom: 24px;
+        }
+
+        .back-btn:hover {
+            color: var(--color-accent);
+            background: var(--color-card-bg);
+            transform: translateX(-4px);
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0 60px;
+        }
+
+        .header h1 {
+            font-size: clamp(36px, 5vw, 48px);
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--color-text);
+        }
+
+        .header p {
+            font-size: 18px;
+            color: var(--color-text-secondary);
+            font-weight: 400;
+        }
+
+        .ffs-explanation {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8787 100%);
+            color: white;
+            padding: 32px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .ffs-explanation h2 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .ffs-explanation p {
+            font-size: 16px;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        .ffs-explanation ul {
+            margin-top: 16px;
+            list-style: none;
+            padding: 0;
+        }
+
+        .ffs-explanation li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .ffs-explanation li:before {
+            content: "⚠️";
+            position: absolute;
+            left: 0;
+        }
+
+        .add-mistake-section {
+            background: var(--color-card-bg);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid var(--color-border);
+            margin-bottom: 32px;
+        }
+
+        .add-mistake-section h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--color-text);
+        }
+
+        .mistake-form {
+            display: grid;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            padding: 12px 16px;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            background: var(--color-bg);
+            color: var(--color-text);
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--color-accent);
+        }
+
+        .add-btn {
+            background: var(--color-accent);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .add-btn:hover {
+            background: var(--color-accent-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .mistakes-grid {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .mistake-card {
+            background: var(--color-card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+            transition: var(--transition);
+        }
+
+        .mistake-card:hover {
+            border-color: #ff6b6b;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .mistake-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 16px;
+        }
+
+        .mistake-type {
+            background: #ff6b6b;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .mistake-type.calculation {
+            background: #ff6b6b;
+        }
+
+        .mistake-type.rounding {
+            background: #ffa502;
+        }
+
+        .mistake-type.units {
+            background: #ff7f50;
+        }
+
+        .mistake-type.formatting {
+            background: #a55eea;
+        }
+
+        .mistake-type.theory {
+            background: #45aaf2;
+        }
+
+        .mistake-type.other {
+            background: #6c757d;
+        }
+
+        .mistake-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 8px;
+        }
+
+        .mistake-description {
+            color: var(--color-text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .mistake-solution {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .mistake-solution strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .mistake-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-top: 12px;
+        }
+
+        .mistake-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .edit-btn:hover {
+            background: var(--color-accent);
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #ff4757;
+            color: white;
+        }
+
+        .filter-section {
+            background: var(--color-card-bg);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+            margin-bottom: 24px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--color-border);
+            background: var(--color-bg);
+            color: var(--color-text);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--color-accent);
+            border-color: var(--color-accent);
+            color: white;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-box {
+            background: var(--color-card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--color-accent);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 64px 24px;
+            color: var(--color-text-secondary);
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .mistake-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .mistake-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ffs-container">
+        <a href="chemistry-tracker.html" class="back-btn">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M12 4L6 10L12 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to Papers
+        </a>
+
+        <div class="header">
+            <h1>FFS - Frequent Failed Skills</h1>
+            <p>Track your silly mistakes and learn from them</p>
+        </div>
+
+        <div class="ffs-explanation">
+            <h2>What is FFS? 😅</h2>
+            <p>
+                FFS stands for "Frequent Failed Skills" - a place to document those annoying mistakes you keep making.
+                We all make silly errors, but the key is to learn from them!
+            </p>
+            <ul>
+                <li>Always forgetting to round to 2 decimal places?</li>
+                <li>Constantly missing units in your answers?</li>
+                <li>Making the same calculation error repeatedly?</li>
+                <li>Forgetting specific exam technique details?</li>
+            </ul>
+            <p style="margin-top: 16px;">
+                Document them here so you never forget again! Review before each exam to avoid losing easy marks.
+            </p>
+        </div>
+
+        <div class="stats-row" id="statsRow">
+            <!-- Stats will be loaded here -->
+        </div>
+
+        <div class="add-mistake-section">
+            <h3>Add New Mistake</h3>
+            <form class="mistake-form" onsubmit="addMistake(event)">
+                <div class="form-group">
+                    <label class="form-label">Mistake Title *</label>
+                    <input type="text" class="form-input" id="mistakeTitle" required
+                        placeholder="e.g., Forgetting to round to 2 d.p.">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Type *</label>
+                    <select class="form-select" id="mistakeType" required>
+                        <option value="rounding">Rounding</option>
+                        <option value="units">Units</option>
+                        <option value="calculation">Calculation Error</option>
+                        <option value="formatting">Formatting/Presentation</option>
+                        <option value="theory">Theory Misunderstanding</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Description *</label>
+                    <textarea class="form-textarea" id="mistakeDescription" required
+                        placeholder="Describe what went wrong and when it happened..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">How to Avoid This *</label>
+                    <textarea class="form-textarea" id="mistakeSolution" required
+                        placeholder="Write down how to prevent this mistake in the future..."></textarea>
+                </div>
+
+                <button type="submit" class="add-btn">+ Add Mistake</button>
+            </form>
+        </div>
+
+        <div class="filter-section">
+            <div class="filter-buttons" id="filterButtons">
+                <button class="filter-btn active" onclick="filterMistakes('all')">All</button>
+                <button class="filter-btn" onclick="filterMistakes('rounding')">Rounding</button>
+                <button class="filter-btn" onclick="filterMistakes('units')">Units</button>
+                <button class="filter-btn" onclick="filterMistakes('calculation')">Calculation</button>
+                <button class="filter-btn" onclick="filterMistakes('formatting')">Formatting</button>
+                <button class="filter-btn" onclick="filterMistakes('theory')">Theory</button>
+                <button class="filter-btn" onclick="filterMistakes('other')">Other</button>
+            </div>
+        </div>
+
+        <div class="mistakes-grid" id="mistakesGrid">
+            <!-- Mistakes will be loaded here -->
+        </div>
+    </div>
+
+    <script>
+        let mistakes = [];
+        let currentFilter = 'all';
+
+        // Initialize
+        function init() {
+            loadMistakes();
+            renderStats();
+            renderMistakes();
+        }
+
+        // Load mistakes from localStorage
+        function loadMistakes() {
+            const saved = localStorage.getItem('chemistry-ffs-mistakes');
+            if (saved) {
+                mistakes = JSON.parse(saved);
+            } else {
+                // Add example mistakes
+                mistakes = [
+                    {
+                        id: Date.now(),
+                        title: "Always round to 2 decimal places",
+                        type: "rounding",
+                        description: "Keep forgetting to round final answers to 2 d.p. in calculations. Lost marks on equilibrium constant question.",
+                        solution: "Write 'ROUND 2DP' at the top of every page. Check every numerical answer before moving on.",
+                        dateAdded: new Date().toISOString()
+                    }
+                ];
+                saveMistakes();
+            }
+        }
+
+        // Save mistakes to localStorage
+        function saveMistakes() {
+            localStorage.setItem('chemistry-ffs-mistakes', JSON.stringify(mistakes));
+        }
+
+        // Add mistake
+        function addMistake(event) {
+            event.preventDefault();
+
+            const newMistake = {
+                id: Date.now(),
+                title: document.getElementById('mistakeTitle').value,
+                type: document.getElementById('mistakeType').value,
+                description: document.getElementById('mistakeDescription').value,
+                solution: document.getElementById('mistakeSolution').value,
+                dateAdded: new Date().toISOString()
+            };
+
+            mistakes.unshift(newMistake); // Add to beginning
+            saveMistakes();
+
+            // Clear form
+            document.getElementById('mistakeTitle').value = '';
+            document.getElementById('mistakeDescription').value = '';
+            document.getElementById('mistakeSolution').value = '';
+
+            renderStats();
+            renderMistakes();
+        }
+
+        // Delete mistake
+        function deleteMistake(id) {
+            if (confirm('Are you sure you want to delete this mistake?')) {
+                mistakes = mistakes.filter(m => m.id !== id);
+                saveMistakes();
+                renderStats();
+                renderMistakes();
+            }
+        }
+
+        // Filter mistakes
+        function filterMistakes(type) {
+            currentFilter = type;
+
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            renderMistakes();
+        }
+
+        // Render stats
+        function renderStats() {
+            const types = ['rounding', 'units', 'calculation', 'formatting', 'theory', 'other'];
+            const typeCounts = {};
+            types.forEach(type => {
+                typeCounts[type] = mistakes.filter(m => m.type === type).length;
+            });
+
+            document.getElementById('statsRow').innerHTML = `
+                <div class="stat-box">
+                    <div class="stat-value">${mistakes.length}</div>
+                    <div class="stat-label">Total Mistakes</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">${typeCounts.rounding}</div>
+                    <div class="stat-label">Rounding</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">${typeCounts.units}</div>
+                    <div class="stat-label">Units</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">${typeCounts.calculation}</div>
+                    <div class="stat-label">Calculations</div>
+                </div>
+            `;
+        }
+
+        // Render mistakes
+        function renderMistakes() {
+            const container = document.getElementById('mistakesGrid');
+            const filtered = currentFilter === 'all'
+                ? mistakes
+                : mistakes.filter(m => m.type === currentFilter);
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No mistakes tracked yet</h3>
+                        <p>Start documenting your common errors to improve your exam performance!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(mistake => `
+                <div class="mistake-card">
+                    <div class="mistake-header">
+                        <span class="mistake-type ${mistake.type}">${mistake.type}</span>
+                        <div class="mistake-actions">
+                            <button class="action-btn delete-btn" onclick="deleteMistake(${mistake.id})" title="Delete">
+                                🗑️
+                            </button>
+                        </div>
+                    </div>
+                    <h3 class="mistake-title">${mistake.title}</h3>
+                    <p class="mistake-description">${mistake.description}</p>
+                    <div class="mistake-solution">
+                        <strong>✅ How to avoid:</strong>
+                        ${mistake.solution}
+                    </div>
+                    <div class="mistake-meta">
+                        <span>Added: ${new Date(mistake.dateAdded).toLocaleDateString()}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>

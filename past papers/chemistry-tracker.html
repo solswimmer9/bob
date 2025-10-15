@@ -189,6 +189,46 @@
             background: var(--color-accent-hover);
         }
 
+        .resource-btn.track-btn {
+            background: #2ed573;
+            border-color: #2ed573;
+            color: white;
+        }
+
+        .resource-btn.track-btn:hover {
+            background: #26de81;
+            border-color: #26de81;
+        }
+
+        .utility-nav {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .utility-btn {
+            padding: 12px 24px;
+            background: var(--color-card-bg);
+            border: 2px solid var(--color-border);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--color-text);
+            font-weight: 600;
+            font-size: 14px;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .utility-btn:hover {
+            background: var(--color-accent);
+            border-color: var(--color-accent);
+            color: white;
+            transform: translateY(-2px);
+        }
+
         @media (max-width: 768px) {
             .header {
                 padding: 60px 0 40px;
@@ -221,6 +261,15 @@
             Back to Home
         </a>
 
+        <div class="utility-nav">
+            <a href="analytics.html" class="utility-btn">
+                📈 View Analytics
+            </a>
+            <a href="ffs-mistakes.html" class="utility-btn">
+                ⚠️ FFS Document
+            </a>
+        </div>
+
         <div class="header">
             <h1>A Level Chemistry Past Papers</h1>
             <p>Access past papers and mark schemes</p>
@@ -235,36 +284,214 @@
     </div>
 
     <script>
-        // Past papers data
-        const papers = [
+        // Past papers data - embedded for compatibility with file:// protocol
+        const papersData = [
             {
-                id: 1,
-                examBoard: 'AQA',
-                year: 2024,
-                session: 'June',
-                paperCode: '7405/1',
-                title: 'Paper 1 - Physical Chemistry',
-                maxMarks: 105,
-                duration: 120,
-                questionPaper: 'data/AQA-74051-QP-JUN24.PDF',
-                markScheme: 'data/AQA-74051-MS-JUN24.PDF'
+                "id": "aqa-74051-jun24",
+                "examBoard": "AQA",
+                "qualification": "A-Level",
+                "paperCode": "7405/1",
+                "year": 2024,
+                "session": "June",
+                "unit": "Paper 1",
+                "title": "Physical Chemistry",
+                "maxMarks": 105,
+                "duration": 120,
+                "questionPaper": "AQA-74051-QP-JUN24.PDF",
+                "markScheme": "AQA-74051-MS-JUN24.PDF",
+                "topics": [
+                    "Atomic Structure",
+                    "Amount of Substance",
+                    "Bonding",
+                    "Energetics",
+                    "Kinetics",
+                    "Chemical Equilibria",
+                    "Oxidation & Reduction",
+                    "Thermodynamics",
+                    "Rate Equations",
+                    "Equilibrium Constant",
+                    "Acids & Bases"
+                ],
+                "description": "A-Level Chemistry Paper 1 covering all Physical Chemistry topics",
+                "dateAdded": "2024-10-14"
             },
             {
-                id: 2,
-                examBoard: 'AQA',
-                year: 2023,
-                session: 'June',
-                paperCode: '7405/1',
-                title: 'Paper 1 - Physical Chemistry',
-                maxMarks: 105,
-                duration: 120,
-                questionPaper: 'data/AQA-74051-QP-JUN23.PDF',
-                markScheme: 'data/AQA-74051-MS-JUN23.PDF'
+                "id": "aqa-74051-jun23",
+                "examBoard": "AQA",
+                "qualification": "A-Level",
+                "paperCode": "7405/1",
+                "year": 2023,
+                "session": "June",
+                "unit": "Paper 1",
+                "title": "Physical Chemistry",
+                "maxMarks": 105,
+                "duration": 120,
+                "questionPaper": "AQA-74051-QP-JUN23.PDF",
+                "markScheme": "AQA-74051-MS-JUN23.PDF",
+                "topics": [
+                    "Atomic Structure",
+                    "Amount of Substance",
+                    "Bonding",
+                    "Energetics",
+                    "Kinetics",
+                    "Chemical Equilibria",
+                    "Oxidation & Reduction",
+                    "Thermodynamics",
+                    "Rate Equations",
+                    "Equilibrium Constant",
+                    "Acids & Bases"
+                ],
+                "description": "A-Level Chemistry Paper 1 covering all Physical Chemistry topics",
+                "dateAdded": "2024-10-14"
+            },
+            {
+                "id": "aqa-74051-jun22",
+                "examBoard": "AQA",
+                "qualification": "A-Level",
+                "paperCode": "7405/1",
+                "year": 2022,
+                "session": "June",
+                "unit": "Paper 1",
+                "title": "Physical Chemistry",
+                "maxMarks": 105,
+                "duration": 120,
+                "questionPaper": "AQA-74051-QP-JUN22 (1).pdf",
+                "markScheme": "AQA-74051-MS-JUN22.pdf",
+                "topics": [
+                    "Atomic Structure",
+                    "Amount of Substance",
+                    "Bonding",
+                    "Energetics",
+                    "Kinetics",
+                    "Chemical Equilibria",
+                    "Oxidation & Reduction",
+                    "Thermodynamics",
+                    "Rate Equations",
+                    "Equilibrium Constant",
+                    "Acids & Bases"
+                ],
+                "description": "A-Level Chemistry Paper 1 covering all Physical Chemistry topics",
+                "dateAdded": "2024-10-15"
+            },
+            {
+                "id": "aqa-74051-nov21",
+                "examBoard": "AQA",
+                "qualification": "A-Level",
+                "paperCode": "7405/1",
+                "year": 2021,
+                "session": "November",
+                "unit": "Paper 1",
+                "title": "Physical Chemistry",
+                "maxMarks": 105,
+                "duration": 120,
+                "questionPaper": "AQA-74051-QP-NOV21.pdf",
+                "markScheme": "AQA-74051-MS-NOV21.pdf",
+                "topics": [
+                    "Atomic Structure",
+                    "Amount of Substance",
+                    "Bonding",
+                    "Energetics",
+                    "Kinetics",
+                    "Chemical Equilibria",
+                    "Oxidation & Reduction",
+                    "Thermodynamics",
+                    "Rate Equations",
+                    "Equilibrium Constant",
+                    "Acids & Bases"
+                ],
+                "description": "A-Level Chemistry Paper 1 covering all Physical Chemistry topics",
+                "dateAdded": "2024-10-15"
+            },
+            {
+                "id": "aqa-74052-nov21",
+                "examBoard": "AQA",
+                "qualification": "A-Level",
+                "paperCode": "7405/2",
+                "year": 2021,
+                "session": "November",
+                "unit": "Paper 2",
+                "title": "Organic & Inorganic Chemistry",
+                "maxMarks": 105,
+                "duration": 120,
+                "questionPaper": "AQA-74052-QP-NOV21.pdf",
+                "markScheme": "AQA-74052-MS-NOV21.pdf",
+                "topics": [
+                    "Periodicity",
+                    "Group 2",
+                    "Group 7",
+                    "Transition Metals",
+                    "Organic Analysis",
+                    "Alkanes",
+                    "Alkenes",
+                    "Alcohols",
+                    "Organic Synthesis",
+                    "Analytical Techniques"
+                ],
+                "description": "A-Level Chemistry Paper 2 covering Organic and Inorganic Chemistry topics",
+                "dateAdded": "2024-10-15"
+            },
+            {
+                "id": "aqa-74052-nov20",
+                "examBoard": "AQA",
+                "qualification": "A-Level",
+                "paperCode": "7405/2",
+                "year": 2020,
+                "session": "November",
+                "unit": "Paper 2",
+                "title": "Organic & Inorganic Chemistry",
+                "maxMarks": 105,
+                "duration": 120,
+                "questionPaper": "AQA-74052-QP-NOV20.pdf",
+                "markScheme": "AQA-74052-W-MS-NOV20.pdf",
+                "topics": [
+                    "Periodicity",
+                    "Group 2",
+                    "Group 7",
+                    "Transition Metals",
+                    "Organic Analysis",
+                    "Alkanes",
+                    "Alkenes",
+                    "Alcohols",
+                    "Organic Synthesis",
+                    "Analytical Techniques"
+                ],
+                "description": "A-Level Chemistry Paper 2 covering Organic and Inorganic Chemistry topics",
+                "dateAdded": "2024-10-15"
             }
         ];
 
+        // Load and render papers
+        async function loadAndRenderPapers() {
+            try {
+                // Try to fetch from JSON file first (works with local server)
+                const response = await fetch('data/PastPapers.json');
+                const papers = await response.json();
+
+                // Sort and render
+                sortAndRenderPapers(papers);
+            } catch (error) {
+                // Fallback to embedded data (works with file:// protocol)
+                console.log('Using embedded data (fetch failed, likely due to file:// protocol)');
+                sortAndRenderPapers(papersData);
+            }
+        }
+
+        // Sort and render papers
+        function sortAndRenderPapers(papers) {
+            // Sort papers by year (most recent first) and then by session
+            papers.sort((a, b) => {
+                if (b.year !== a.year) return b.year - a.year;
+                // November comes after June in the same year
+                if (a.session === 'November' && b.session === 'June') return -1;
+                if (a.session === 'June' && b.session === 'November') return 1;
+                return 0;
+            });
+
+            renderPapers(papers);
+        }
+
         // Render papers
-        function renderPapers() {
+        function renderPapers(papers) {
             const grid = document.getElementById('papersGrid');
 
             grid.innerHTML = papers.map(paper => `
@@ -291,17 +518,20 @@
                             <span class="detail-value">${paper.duration} minutes</span>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-label">Paper Code</span>
-                            <span class="detail-value">${paper.paperCode}</span>
+                            <span class="detail-label">Unit</span>
+                            <span class="detail-value">${paper.unit}</span>
                         </div>
                     </div>
 
                     <div class="paper-resources">
-                        <a href="${paper.questionPaper}" target="_blank" class="resource-btn primary">
+                        <a href="data/${paper.questionPaper}" target="_blank" class="resource-btn primary">
                             📄 Question Paper
                         </a>
-                        <a href="${paper.markScheme}" target="_blank" class="resource-btn">
+                        <a href="data/${paper.markScheme}" target="_blank" class="resource-btn">
                             ✅ Mark Scheme
+                        </a>
+                        <a href="paper-tracker.html?id=${paper.id}" class="resource-btn track-btn">
+                            📊 Track Progress
                         </a>
                     </div>
                 </div>
@@ -309,7 +539,7 @@
         }
 
         // Initialize
-        renderPapers();
+        loadAndRenderPapers();
     </script>
 </body>
 </html>

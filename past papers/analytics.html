@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Analytics</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="past-papers.css">
+</head>
+<body>
+    <div class="analytics-container">
+        <a href="chemistry-tracker.html" class="back-btn">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M12 4L6 10L12 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to Papers
+        </a>
+
+        <div class="header">
+            <h1>Performance Analytics</h1>
+            <p>Track your progress and identify weak areas</p>
+        </div>
+
+        <div id="contentContainer">
+            <!-- Content will be loaded here -->
+        </div>
+    </div>
+
+    <script>
+        // Grade boundaries for A-Level Chemistry (Total 300 marks across 3 papers)
+        const GRADE_BOUNDARIES = {
+            'A*': 239,
+            'A': 198,
+            'B': 162,
+            'C': 126,
+            'D': 90,
+            'E': 55
+        };
+
+        let analytics = {};
+
+        // Initialize
+        function init() {
+            loadAnalytics();
+            render();
+        }
+
+        // Load analytics from localStorage
+        function loadAnalytics() {
+            const saved = localStorage.getItem('chemistry-analytics');
+            if (saved) {
+                analytics = JSON.parse(saved);
+            }
+        }
+
+        // Calculate overall stats
+        function calculateOverallStats() {
+            const papers = Object.values(analytics);
+
+            if (papers.length === 0) {
+                return null;
+            }
+
+            const totalMaxMarks = papers.reduce((sum, p) => sum + p.totalMarks, 0);
+            const totalEarnedMarks = papers.reduce((sum, p) => sum + p.earnedMarks, 0);
+            const averagePercentage = totalMaxMarks > 0 ? (totalEarnedMarks / totalMaxMarks * 100) : 0;
+
+            // Project to 300 marks
+            const projectedTotal = (totalEarnedMarks / totalMaxMarks) * 300;
+
+            return {
+                papersCompleted: papers.length,
+                totalMaxMarks,
+                totalEarnedMarks,
+                averagePercentage,
+                projectedTotal
+            };
+        }
+
+        // Calculate topic performance
+        function calculateTopicPerformance() {
+            const topicStats = {};
+
+            Object.values(analytics).forEach(paper => {
+                paper.questions.forEach(q => {
+                    if (!topicStats[q.topic]) {
+                        topicStats[q.topic] = {
+                            maxMarks: 0,
+                            earnedMarks: 0,
+                            count: 0
+                        };
+                    }
+
+                    topicStats[q.topic].maxMarks += parseFloat(q.maxMarks) || 0;
+                    topicStats[q.topic].earnedMarks += parseFloat(q.earnedMarks) || 0;
+                    topicStats[q.topic].count += 1;
+                });
+            });
+
+            // Convert to array and calculate percentages
+            return Object.entries(topicStats)
+                .map(([topic, stats]) => ({
+                    topic,
+                    maxMarks: stats.maxMarks,
+                    earnedMarks: stats.earnedMarks,
+                    percentage: stats.maxMarks > 0 ? (stats.earnedMarks / stats.maxMarks * 100) : 0,
+                    count: stats.count
+                }))
+                .sort((a, b) => a.percentage - b.percentage);
+        }
+
+        // Get score class
+        function getScoreClass(percentage) {
+            if (percentage >= 80) return 'excellent';
+            if (percentage >= 70) return 'good';
+            if (percentage >= 50) return 'okay';
+            return 'poor';
+        }
+
+        // Get bar color
+        function getBarColor(percentage) {
+            if (percentage >= 80) return '#2ed573';
+            if (percentage >= 70) return '#26de81';
+            if (percentage >= 50) return '#ffa502';
+            return '#ff6348';
+        }
+
+        // Render everything
+        function render() {
+            const container = document.getElementById('contentContainer');
+            const stats = calculateOverallStats();
+
+            if (!stats || stats.papersCompleted === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No Data Yet</h3>
+                        <p>Start tracking your paper progress to see analytics here!</p>
+                        <a href="chemistry-tracker.html">Go to Past Papers</a>
+                    </div>
+                `;
+                return;
+            }
+
+            const topicPerformance = calculateTopicPerformance();
+            const weakAreas = topicPerformance.slice(0, 5);
+
+            // Determine projected grade
+            let projectedGrade = 'U';
+            let projectedGradeClass = '';
+            if (stats.projectedTotal >= GRADE_BOUNDARIES['A*']) {
+                projectedGrade = 'A*';
+                projectedGradeClass = 'success';
+            } else if (stats.projectedTotal >= GRADE_BOUNDARIES['A']) {
+                projectedGrade = 'A';
+                projectedGradeClass = 'success';
+            } else if (stats.projectedTotal >= GRADE_BOUNDARIES['B']) {
+                projectedGrade = 'B';
+                projectedGradeClass = 'success';
+            } else if (stats.projectedTotal >= GRADE_BOUNDARIES['C']) {
+                projectedGrade = 'C';
+                projectedGradeClass = 'warning';
+            } else if (stats.projectedTotal >= GRADE_BOUNDARIES['D']) {
+                projectedGrade = 'D';
+                projectedGradeClass = 'warning';
+            } else if (stats.projectedTotal >= GRADE_BOUNDARIES['E']) {
+                projectedGrade = 'E';
+                projectedGradeClass = 'warning';
+            }
+
+            container.innerHTML = `
+                <div class="overall-stats">
+                    <div class="stat-card primary">
+                        <div class="stat-number">${stats.papersCompleted}</div>
+                        <div class="stat-label">Papers Tracked</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${stats.totalEarnedMarks.toFixed(0)} / ${stats.totalMaxMarks}</div>
+                        <div class="stat-label">Total Marks</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${stats.averagePercentage.toFixed(1)}%</div>
+                        <div class="stat-label">Average Score</div>
+                    </div>
+                    <div class="stat-card ${projectedGradeClass}">
+                        <div class="stat-number">${projectedGrade}</div>
+                        <div class="stat-label">Projected Grade</div>
+                        <div class="stat-subtitle">${stats.projectedTotal.toFixed(0)} / 300 marks</div>
+                    </div>
+                </div>
+
+                <div class="grade-projection">
+                    <h2>Grade Boundaries Progress</h2>
+                    <div class="grade-bars">
+                        ${Object.entries(GRADE_BOUNDARIES).map(([grade, boundary]) => {
+                            const percentage = (stats.projectedTotal / boundary) * 100;
+                            const cappedPercentage = Math.min(percentage, 100);
+                            const achieved = percentage >= 100;
+                            const close = percentage >= 90 && percentage < 100;
+                            const fillClass = achieved ? 'achieved' : (close ? 'close' : '');
+
+                            return `
+                                <div class="grade-bar">
+                                    <div class="grade-label">${grade}</div>
+                                    <div class="grade-progress">
+                                        <div class="grade-fill ${fillClass}" style="width: ${cappedPercentage}%">
+                                            ${cappedPercentage >= 20 ? cappedPercentage.toFixed(0) + '%' : ''}
+                                        </div>
+                                    </div>
+                                    <div class="grade-target">${boundary} marks</div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+
+                <div class="papers-summary">
+                    <h2>Papers Overview</h2>
+                    <div class="papers-grid">
+                        ${Object.values(analytics).map(paper => {
+                            const scoreClass = getScoreClass(parseFloat(paper.percentage));
+                            return `
+                                <div class="paper-summary-card">
+                                    <div class="paper-title">${paper.paper.title}</div>
+                                    <div class="paper-code">${paper.paper.paperCode} - ${paper.paper.session} ${paper.paper.year}</div>
+                                    <div class="paper-score">
+                                        <div class="score-value">${paper.earnedMarks.toFixed(1)} / ${paper.totalMarks}</div>
+                                        <div class="score-percentage ${scoreClass}">${paper.percentage}%</div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+
+                ${topicPerformance.length > 0 ? `
+                    <div class="topic-breakdown">
+                        <h2>Topic Performance</h2>
+                        <div class="topics-grid">
+                            ${topicPerformance.map(topic => {
+                                const color = getBarColor(topic.percentage);
+                                return `
+                                    <div class="topic-card">
+                                        <div class="topic-header">
+                                            <div class="topic-name">${topic.topic}</div>
+                                            <div class="topic-score" style="color: ${color}">
+                                                ${topic.percentage.toFixed(0)}%
+                                            </div>
+                                        </div>
+                                        <div class="topic-bar">
+                                            <div class="topic-bar-fill" style="width: ${topic.percentage}%; background: ${color}"></div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+
+                    ${weakAreas.length > 0 ? `
+                        <div class="weak-areas">
+                            <h2>⚠️ Areas Needing Focus</h2>
+                            <p style="margin-bottom: 24px; opacity: 0.9;">
+                                These topics have the lowest performance. Focus your revision here for maximum impact!
+                            </p>
+                            <div class="weak-areas-list">
+                                ${weakAreas.map(area => `
+                                    <div class="weak-area-item">
+                                        <div>
+                                            <div class="weak-area-name">${area.topic}</div>
+                                            <div style="font-size: 12px; opacity: 0.8; margin-top: 4px;">
+                                                ${area.earnedMarks.toFixed(1)} / ${area.maxMarks.toFixed(1)} marks (${area.count} questions)
+                                            </div>
+                                        </div>
+                                        <div class="weak-area-score">${area.percentage.toFixed(0)}%</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                ` : ''}
+            `;
+        }
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>
