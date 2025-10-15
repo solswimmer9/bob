@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physical Chemistry - A Level Flashcards</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <header class="hero">
+            <div class="hero-content">
+                <div class="logo">
+                    <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                        <circle cx="30" cy="30" r="22.5" stroke="currentColor" stroke-width="3"/>
+                        <circle cx="30" cy="30" r="15" stroke="currentColor" stroke-width="3" opacity="0.5"/>
+                        <circle cx="30" cy="30" r="7.5" stroke="currentColor" stroke-width="3" opacity="0.3"/>
+                    </svg>
+                </div>
+                <h1 class="hero-title">
+                    <span class="fade-in-up">Physical</span>
+                    <span class="fade-in-up delay-1">Chemistry</span>
+                </h1>
+                <p class="hero-subtitle fade-in-up delay-2">Understand thermodynamics, kinetics, and equilibria</p>
+                <a href="index.html" class="cta-button fade-in-up delay-3">Back to Home</a>
+            </div>
+
+            <!-- Floating Elements -->
+            <div class="floating-elements">
+                <div class="float-element element-1">”H</div>
+                <div class="float-element element-2">Kš</div>
+                <div class="float-element element-3">”G</div>
+                <div class="float-element element-4">pH</div>
+                <div class="float-element element-5">”S</div>
+            </div>
+        </header>
+
+        <!-- Flashcard Section with Spaced Repetition -->
+        <section class="demo-section">
+            <h2 class="section-title">Physical Chemistry Flashcards</h2>
+            <p class="due-cards-info" id="progress">Loading cards...</p>
+
+            <div class="flashcard-container">
+                <div class="flashcard" id="flashcard">
+                    <div class="flashcard-inner">
+                        <div class="flashcard-front">
+                            <span class="card-label">Question</span>
+                            <h3 id="question">Loading...</h3>
+                        </div>
+                        <div class="flashcard-back">
+                            <span class="card-label">Answer</span>
+                            <h3 id="answer">Loading...</h3>
+                            <p class="card-explanation" id="explanation"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Show Answer Button -->
+            <div class="card-controls">
+                <button class="show-answer-btn" id="showAnswerBtn">Show Answer</button>
+            </div>
+
+            <!-- Difficulty Rating Buttons (hidden initially) -->
+            <div class="difficulty-buttons" id="difficultyButtons" style="display: none;">
+                <button class="difficulty-btn hard-btn" data-difficulty="hard">
+                    <span class="btn-label">Hard</span>
+                    <span class="btn-interval">1 day</span>
+                </button>
+                <button class="difficulty-btn medium-btn" data-difficulty="medium">
+                    <span class="btn-label">Medium</span>
+                    <span class="btn-interval">2 days</span>
+                </button>
+                <button class="difficulty-btn easy-btn" data-difficulty="easy">
+                    <span class="btn-label">Easy</span>
+                    <span class="btn-interval">4 days</span>
+                </button>
+            </div>
+
+            <!-- Session Progress -->
+            <div class="session-progress" id="sessionProgress">
+                <span class="progress-text">Card <span id="currentCardNum">1</span> of <span id="totalDueCards">0</span></span>
+            </div>
+
+            <!-- Keyboard Shortcuts Hint -->
+            <div class="keyboard-hint" style="margin-top: 20px; text-align: center; opacity: 0.6; font-size: 0.9em;">
+                <p>Keyboard shortcuts: Space/Enter to show answer | 1 = Hard | 2 = Medium | 3 = Easy</p>
+            </div>
+        </section>
+
+        <!-- Topics Covered Section -->
+        <section class="features" style="padding-top: 60px;">
+            <h2 class="section-title" style="text-align: center; margin-bottom: 48px;">AQA Physical Chemistry Topics</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <path d="M10 30L20 10L30 30" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <line x1="14" y1="24" x2="26" y2="24" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h3>Atomic Structure</h3>
+                    <p>Shells, orbitals, ionization energy, mass spectrometry</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <rect x="8" y="8" width="24" height="24" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <line x1="8" y1="16" x2="32" y2="16" stroke="currentColor" stroke-width="2"/>
+                            <line x1="8" y1="24" x2="32" y2="24" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h3>Amount of Substance</h3>
+                    <p>Moles, equations, concentration, ideal gas equation</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <path d="M10 20H30M20 10V30" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="20" cy="20" r="3" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3>Bonding</h3>
+                    <p>Ionic, covalent, metallic bonding, shapes of molecules</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <path d="M5 35L10 15L20 25L30 10L35 20" stroke="currentColor" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                    <h3>Energetics</h3>
+                    <p>Enthalpy changes, Hess's law, bond enthalpies</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <path d="M10 30C15 20 25 20 30 10" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <circle cx="10" cy="30" r="2" fill="currentColor"/>
+                            <circle cx="30" cy="10" r="2" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3>Kinetics</h3>
+                    <p>Reaction rates, collision theory, catalysts</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <path d="M10 20L20 10L30 20M10 20L20 30L30 20" stroke="currentColor" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                    <h3>Chemical Equilibria</h3>
+                    <p>Le Chatelier's principle, Kc, Kp calculations</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <circle cx="15" cy="20" r="8" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <circle cx="25" cy="20" r="8" stroke="currentColor" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                    <h3>Oxidation & Reduction</h3>
+                    <p>Redox reactions, half equations, electrochemical cells</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <path d="M20 8V32M12 14H28M10 20H30M12 26H28" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h3>Thermodynamics</h3>
+                    <p>Entropy, free energy, spontaneous reactions</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <rect x="10" y="15" width="20" height="12" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <line x1="15" y1="15" x2="15" y2="10" stroke="currentColor" stroke-width="2"/>
+                            <line x1="25" y1="15" x2="25" y2="10" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="15" cy="8" r="2" fill="currentColor"/>
+                            <circle cx="25" cy="8" r="2" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3>Rate Equations</h3>
+                    <p>Rate constants, orders of reaction, Arrhenius equation</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <path d="M20 5V35M5 20H35" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="20" cy="20" r="12" stroke="currentColor" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                    <h3>Equilibrium Constant</h3>
+                    <p>Kc, Kp, partial pressures, equilibrium calculations</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <path d="M10 25C10 18 14 12 20 12C26 12 30 18 30 25" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <circle cx="20" cy="28" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                    <h3>Acids & Bases</h3>
+                    <p>pH, weak acids, buffers, titrations, indicators</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">60</div>
+                    <div class="stat-label">Physical Cards</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalDueDisplay">-</div>
+                    <div class="stat-label">Due Today</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Topics</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Built for A-Level Chemistry Students</p>
+            <p class="footer-tagline">I create; therefore I am woof</p>
+        </footer>
+    </div>
+
+    <!-- Link to the external JavaScript file with spaced repetition -->
+    <script src="physical.js"></script>
+</body>
+</html>

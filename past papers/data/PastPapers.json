@@ -1,0 +1,60 @@
+[
+  {
+    "id": "aqa-74051-jun24",
+    "examBoard": "AQA",
+    "qualification": "A-Level",
+    "paperCode": "7405/1",
+    "year": 2024,
+    "session": "June",
+    "unit": "Paper 1",
+    "title": "Physical Chemistry",
+    "maxMarks": 105,
+    "duration": 120,
+    "questionPaper": "AQA-74051-QP-JUN24.PDF",
+    "markScheme": "AQA-74051-MS-JUN24.PDF",
+    "topics": [
+      "Atomic Structure",
+      "Amount of Substance",
+      "Bonding",
+      "Energetics",
+      "Kinetics",
+      "Chemical Equilibria",
+      "Oxidation & Reduction",
+      "Thermodynamics",
+      "Rate Equations",
+      "Equilibrium Constant",
+      "Acids & Bases"
+    ],
+    "description": "A-Level Chemistry Paper 1 covering all Physical Chemistry topics",
+    "dateAdded": "2024-10-14"
+  },
+  {
+    "id": "aqa-74051-jun23",
+    "examBoard": "AQA",
+    "qualification": "A-Level",
+    "paperCode": "7405/1",
+    "year": 2023,
+    "session": "June",
+    "unit": "Paper 1",
+    "title": "Physical Chemistry",
+    "maxMarks": 105,
+    "duration": 120,
+    "questionPaper": "AQA-74051-QP-JUN23.PDF",
+    "markScheme": "AQA-74051-MS-JUN23.PDF",
+    "topics": [
+      "Atomic Structure",
+      "Amount of Substance",
+      "Bonding",
+      "Energetics",
+      "Kinetics",
+      "Chemical Equilibria",
+      "Oxidation & Reduction",
+      "Thermodynamics",
+      "Rate Equations",
+      "Equilibrium Constant",
+      "Acids & Bases"
+    ],
+    "description": "A-Level Chemistry Paper 1 covering all Physical Chemistry topics",
+    "dateAdded": "2024-10-14"
+  }
+]

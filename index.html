@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemistry Flashcards - A Level</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <header class="hero">
+            <div class="hero-content">
+                <div class="logo">
+                    <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                        <path d="M30 5L50 17.5V42.5L30 55L10 42.5V17.5L30 5Z" stroke="currentColor" stroke-width="2" fill="none"/>
+                        <circle cx="30" cy="30" r="8" fill="currentColor" opacity="0.3"/>
+                    </svg>
+                </div>
+                <h1 class="hero-title">
+                    <span class="fade-in-up">Chemistry</span>
+                    <span class="fade-in-up delay-1">Flashcards</span>
+                </h1>
+                <p class="hero-subtitle fade-in-up delay-2">Master A-Level Chemistry with interactive flashcards</p>
+                <button class="cta-button fade-in-up delay-3">Get Started</button>
+            </div>
+
+            <!-- Floating Elements -->
+            <div class="floating-elements">
+                <div class="float-element element-1">H�O</div>
+                <div class="float-element element-2">CO�</div>
+                <div class="float-element element-3">NaCl</div>
+                <div class="float-element element-4">C�H��O�</div>
+                <div class="float-element element-5">NH�</div>
+            </div>
+        </header>
+
+        <!-- Features Section -->
+        <section class="features">
+            <div class="feature-grid">
+                <a href="Organic.html" class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <rect x="5" y="10" width="30" height="25" rx="2" stroke="currentColor" stroke-width="2"/>
+                            <path d="M15 10V5" stroke="currentColor" stroke-width="2"/>
+                            <path d="M25 10V5" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h3>Organic Chemistry</h3>
+                    <p>Master mechanisms, nomenclature, and reactions</p>
+                </a>
+
+                <a href="physical.html" class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <circle cx="20" cy="20" r="15" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="20" cy="20" r="10" stroke="currentColor" stroke-width="2" opacity="0.5"/>
+                            <circle cx="20" cy="20" r="5" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+                        </svg>
+                    </div>
+                    <h3>Physical Chemistry</h3>
+                    <p>Understand thermodynamics, kinetics, and equilibria</p>
+                </a>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <path d="M10 30L20 10L30 30" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <line x1="14" y1="24" x2="26" y2="24" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h3>Inorganic Chemistry</h3>
+                    <p>Learn periodic trends and compound properties</p>
+                </div>
+
+                <a href="past papers/chemistry-tracker.html" class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <path d="M10 8h20v24H10z" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <line x1="15" y1="14" x2="25" y2="14" stroke="currentColor" stroke-width="2"/>
+                            <line x1="15" y1="20" x2="25" y2="20" stroke="currentColor" stroke-width="2"/>
+                            <line x1="15" y1="26" x2="22" y2="26" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="30" cy="30" r="5" fill="currentColor" opacity="0.3"/>
+                        </svg>
+                    </div>
+                    <h3>Past Paper Tracker</h3>
+                    <p>Track your progress and performance on past papers</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- Flashcard Demo Section -->
+        <section class="demo-section">
+            <h2 class="section-title">Interactive Learning</h2>
+            <div class="flashcard-container">
+                <div class="flashcard" id="flashcard">
+                    <div class="flashcard-inner">
+                        <div class="flashcard-front">
+                            <span class="card-label">Question</span>
+                            <h3>What is the general formula for alkenes?</h3>
+                        </div>
+                        <div class="flashcard-back">
+                            <span class="card-label">Answer</span>
+                            <h3>C�H��</h3>
+                            <p class="card-explanation">Alkenes are unsaturated hydrocarbons containing at least one carbon-carbon double bond.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-controls">
+                <button class="control-btn prev-btn" id="prevBtn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </button>
+                <span class="card-counter" id="cardCounter">1 / 5</span>
+                <button class="control-btn next-btn" id="nextBtn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">250+</div>
+                    <div class="stat-label">Flashcards</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">Topics</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Free</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Built for A-Level Chemistry Students</p>
+            <p class="footer-tagline">I create; therefore I am woof </p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

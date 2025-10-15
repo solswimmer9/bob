@@ -1,0 +1,616 @@
+
+⏺ I'll help you build a spaced repetition feature into your website.
+  Let me first explore the current codebase to understand the existing
+   structure.
+
+⏺ Search(pattern: "**/*.html")
+  ⎿  Found 6 files (ctrl+o to expand)
+
+⏺ Search(pattern: "**/*.js")
+  ⎿  Found 1 file (ctrl+o to expand)
+
+⏺ Search(pattern: "**/*.css")
+  ⎿  Found 1 file (ctrl+o to expand)
+
+⏺ Search(pattern: "**/*.json")
+  ⎿  Found 0 files 
+
+⏺ Read(flashcards.html)
+  ⎿  Read 1 line
+
+⏺ Read(script.js)
+  ⎿  Read 182 lines
+
+⏺ Read(index.html)
+  ⎿  Read 140 lines
+
+⏺ Now I understand your codebase. I'll implement a spaced repetition
+  system with the features you requested. Let me create a plan for
+  this task.
+
+⏺ Now I'll implement the spaced repetition system. Let me start by
+  updating the JavaScript to add the data structure, storage, and
+  algorithm:
+
+⏺ Update(script.js)
+  ⎿  Updated script.js with 69 additions                           
+        16    // Sample flashcard data
+        17    const flashcards = [
+        18        {
+        19 +          id: 1,
+        20            question: "What is the general formula for 
+             alkenes?",
+        21            answer: "CₙH₂ₙ",
+        22            explanation: "Alkenes are unsaturated 
+             hydrocarbons containing at least one carbon-carbon 
+             double bond."
+        23        },
+        24        {
+        25 +          id: 2,
+        26            question: "What is Avogadro's constant?",
+        27            answer: "6.022 × 10²³ mol⁻¹",
+        28            explanation: "This represents the number of 
+             particles (atoms, molecules, ions) in one mole of a 
+             substance."
+        29        },
+        30        {
+        31 +          id: 3,
+        32            question: "Define electronegativity",
+        33            answer: "The ability of an atom to attract 
+             electrons in a covalent bond",
+        34            explanation: "Electronegativity increases 
+             across a period and decreases down a group in the 
+             periodic table."
+        35        },
+        36        {
+        37 +          id: 4,
+        38            question: "What is the ideal gas equation?",
+        39            answer: "PV = nRT",
+        40            explanation: "P = pressure, V = volume, n = 
+             number of moles, R = gas constant, T = temperature."
+        41        },
+        42        {
+        43 +          id: 5,
+        44            question: "What is a catalyst?",
+        45            answer: "A substance that increases the rate 
+             of reaction without being consumed",
+        46            explanation: "Catalysts work by providing an 
+             alternative reaction pathway with lower activation 
+             energy."
+        47        }
+        48    ];
+        49    
+        50 +  // Spaced Repetition System
+        51 +  class SpacedRepetitionManager {
+        52 +      constructor() {
+        53 +          this.loadProgress();
+        54 +      }
+        55 +  
+        56 +      loadProgress() {
+        57 +          const saved = 
+           + localStorage.getItem('flashcardProgress');
+        58 +          if (saved) {
+        59 +              this.progress = JSON.parse(saved);
+        60 +          } else {
+        61 +              // Initialize all cards as due today
+        62 +              this.progress = {};
+        63 +              flashcards.forEach(card => {
+        64 +                  this.progress[card.id] = {
+        65 +                      nextReview: new 
+           + Date().toISOString(),
+        66 +                      reviewCount: 0
+        67 +                  };
+        68 +              });
+        69 +              this.saveProgress();
+        70 +          }
+        71 +      }
+        72 +  
+        73 +      saveProgress() {
+        74 +          localStorage.setItem('flashcardProgress', 
+           + JSON.stringify(this.progress));
+        75 +      }
+        76 +  
+        77 +      getDueCards() {
+        78 +          const now = new Date();
+        79 +          return flashcards.filter(card => {
+        80 +              const cardProgress = 
+           + this.progress[card.id];
+        81 +              if (!cardProgress) return true;
+        82 +              const nextReview = new 
+           + Date(cardProgress.nextReview);
+        83 +              return nextReview <= now;
+        84 +          });
+        85 +      }
+        86 +  
+        87 +      recordReview(cardId, difficulty) {
+        88 +          const now = new Date();
+        89 +          const daysToAdd = {
+        90 +              'hard': 1,
+        91 +              'medium': 2,
+        92 +              'easy': 4
+        93 +          }[difficulty];
+        94 +  
+        95 +          const nextReview = new Date(now);
+        96 +          nextReview.setDate(nextReview.getDate() + 
+           + daysToAdd);
+        97 +  
+        98 +          this.progress[cardId] = {
+        99 +              nextReview: nextReview.toISOString(),
+       100 +              reviewCount: 
+           + (this.progress[cardId]?.reviewCount || 0) + 1,
+       101 +              lastReviewed: now.toISOString()
+       102 +          };
+       103 +  
+       104 +          this.saveProgress();
+       105 +      }
+       106 +  
+       107 +      getTotalDueCount() {
+       108 +          return this.getDueCards().length;
+       109 +      }
+       110 +  }
+       111 +  
+       112 +  const srManager = new SpacedRepetitionManager();
+       113 +  
+       114    function updateCard(direction) {
+       115        // Remove flipped state if active
+       116        flashcard.classList.remove('flipped');
+
+⏺ Now let me update the HTML to add the "Show Answer" button and the
+  difficulty rating buttons:
+
+⏺ Update(index.html)
+  ⎿  Updated index.html with 17 additions and 10 removals          
+       78            <!-- Flashcard Demo Section -->
+       79            <section class="demo-section">
+       80                <h2 class="section-title">Interactive 
+            Learning</h2>
+       81 +              <p class="due-cards-info" 
+          + id="dueCardsInfo">Loading cards...</p>
+       82                <div class="flashcard-container">
+       83                    <div class="flashcard" id="flashcard">
+       84                        <div class="flashcard-inner">
+       85                            <div class="flashcard-front">
+       86                                <span 
+            class="card-label">Question</span>
+       87                                <h3>What is the general 
+            formula for alkenes?</h3>
+       88 -                              <p class="card-hint">Click
+          -  to reveal</p>
+       88                            </div>
+       89                            <div class="flashcard-back">
+       90                                <span 
+            class="card-label">Answer</span>
+     ...
+        95                    </div>
+        96                </div>
+        97                <div class="card-controls">
+        98 -                  <button class="control-btn prev-btn">
+        99 -                      <svg width="24" height="24" 
+           - viewBox="0 0 24 24" fill="none">
+       100 -                          <path d="M15 18L9 12L15 6" 
+           - stroke="currentColor" stroke-width="2"/>
+       101 -                      </svg>
+        98 +                  <button class="show-answer-btn" 
+           + id="showAnswerBtn">Show Answer</button>
+        99 +              </div>
+         +              <div class="difficulty-buttons" 
+           + id="difficultyButtons" style="display: none;">
+       101 +                  <button class="difficulty-btn 
+           + hard-btn" data-difficulty="hard">
+       102 +                      <span 
+           + class="btn-label">Hard</span>
+       103 +                      <span class="btn-interval">1 
+           + day</span>
+       104                    </button>
+       105 -                  <span class="card-counter">1 / 
+           - 250</span>
+       106 -                  <button class="control-btn next-btn">
+       107 -                      <svg width="24" height="24" 
+           - viewBox="0 0 24 24" fill="none">
+       108 -                          <path d="M9 18L15 12L9 6" 
+           - stroke="currentColor" stroke-width="2"/>
+       109 -                      </svg>
+       105 +                  <button class="difficulty-btn 
+           + medium-btn" data-difficulty="medium">
+       106 +                      <span 
+           + class="btn-label">Medium</span>
+       107 +                      <span class="btn-interval">2 
+           + days</span>
+       108                    </button>
+       109 +                  <button class="difficulty-btn 
+           + easy-btn" data-difficulty="easy">
+       110 +                      <span 
+           + class="btn-label">Easy</span>
+       111 +                      <span class="btn-interval">4 
+           + days</span>
+       112 +                  </button>
+       113                </div>
+       114 +              <div class="session-progress" 
+           + id="sessionProgress">
+       115 +                  <span class="progress-text">Card 
+           + <span id="currentCardNum">1</span> of <span 
+           + id="totalDueCards">0</span></span>
+       116 +              </div>
+       117            </section>
+       118    
+       119            <!-- Stats Section -->
+
+⏺ Now let me replace the flashcard navigation logic with the spaced
+  repetition logic:
+
+⏺ Update(script.js)
+  ⎿  Updated script.js with 10 additions and 12 removals         
+        1 -  // Flashcard flip functionality
+        1 +  // Flashcard UI elements
+        2    const flashcard = 
+            document.getElementById('flashcard');
+        3 +  const showAnswerBtn = 
+          + document.getElementById('showAnswerBtn');
+        4 +  const difficultyButtons = 
+          + document.getElementById('difficultyButtons');
+        5 +  const dueCardsInfo = 
+          + document.getElementById('dueCardsInfo');
+        6 +  const currentCardNumEl = 
+          + document.getElementById('currentCardNum');
+        7 +  const totalDueCardsEl = 
+          + document.getElementById('totalDueCards');
+        8    
+        9 -  flashcard.addEventListener('click', () => {
+       10 -      flashcard.classList.toggle('flipped');
+       11 -  });
+        9 +  // Session state
+       10 +  let dueCards = [];
+       11 +  let currentCardIndex = 0;
+       12 +  let isAnswerShown = false;
+       13    
+       14 -  // Card navigation
+       15 -  const prevBtn = document.querySelector('.prev-btn');
+       16 -  const nextBtn = document.querySelector('.next-btn');
+       17 -  const cardCounter = 
+          - document.querySelector('.card-counter');
+       18 -  
+       19 -  let currentCard = 1;
+       20 -  const totalCards = 250;
+       21 -  
+       14    // Sample flashcard data
+       15    const flashcards = [
+       16        {
+
+⏺ Now let me replace the updateCard function and add the new spaced
+  repetition logic:
+
+⏺ Update(script.js)
+  ⎿  Updated script.js with 69 additions and 21 removals           
+       109    
+       110    const srManager = new SpacedRepetitionManager();
+       111    
+       112 -  function updateCard(direction) {
+       113 -      // Remove flipped state if active
+       114 -      flashcard.classList.remove('flipped');
+       112 +  // Initialize session
+       113 +  function initSession() {
+       114 +      dueCards = srManager.getDueCards();
+       115 +      currentCardIndex = 0;
+       116 +      isAnswerShown = false;
+       117    
+       118 -      // Update counter
+       119 -      if (direction === 'next') {
+       120 -          currentCard = currentCard < totalCards ? 
+           - currentCard + 1 : 1;
+       121 -      } else {
+       122 -          currentCard = currentCard > 1 ? currentCard -
+           -  1 : totalCards;
+       118 +      if (dueCards.length === 0) {
+       119 +          dueCardsInfo.textContent = 'No cards due! 
+           + Come back later.';
+       120 +          flashcard.style.display = 'none';
+       121 +          showAnswerBtn.style.display = 'none';
+       122 +          return;
+       123        }
+       124    
+       125 -      // Update display
+       126 -      cardCounter.textContent = `${currentCard} / 
+           - ${totalCards}`;
+       125 +      dueCardsInfo.textContent = `${dueCards.length} 
+           + card${dueCards.length > 1 ? 's' : ''} due for review`;
+       126 +      totalDueCardsEl.textContent = dueCards.length;
+       127 +      showCurrentCard();
+       128 +  }
+       129    
+       130 -      // Get card data (cycle through available 
+           - flashcards)
+       131 -      const cardIndex = (currentCard - 1) % 
+           - flashcards.length;
+       132 -      const card = flashcards[cardIndex];
+       130 +  function showCurrentCard() {
+       131 +      if (currentCardIndex >= dueCards.length) {
+       132 +          // Session complete
+       133 +          dueCardsInfo.textContent = 'Session complete!
+           +  Great work!';
+       134 +          flashcard.style.display = 'none';
+       135 +          showAnswerBtn.style.display = 'none';
+       136 +          difficultyButtons.style.display = 'none';
+       137 +          return;
+       138 +      }
+       139    
+       140 +      const card = dueCards[currentCardIndex];
+       141 +      isAnswerShown = false;
+       142 +  
+       143 +      // Reset card state
+       144 +      flashcard.classList.remove('flipped');
+       145 +      showAnswerBtn.style.display = 'block';
+       146 +      difficultyButtons.style.display = 'none';
+       147 +  
+       148 +      // Update progress
+       149 +      currentCardNumEl.textContent = currentCardIndex +
+           +  1;
+       150 +  
+       151        // Add animation
+       152        flashcard.style.opacity = '0';
+       153        flashcard.style.transform = 'scale(0.95)';
+     ...
+       143        }, 200);
+       144    }
+       145    
+       146 -  prevBtn.addEventListener('click', () => 
+           - updateCard('prev'));
+       147 -  nextBtn.addEventListener('click', () => 
+           - updateCard('next'));
+       146 +  function showAnswer() {
+       147 +      if (isAnswerShown) return;
+       148    
+       149 +      isAnswerShown = true;
+       150 +      flashcard.classList.add('flipped');
+       151 +      showAnswerBtn.style.display = 'none';
+       152 +      difficultyButtons.style.display = 'flex';
+       153 +  }
+       154 +  
+       155 +  function handleDifficultyClick(difficulty) {
+       156 +      const card = dueCards[currentCardIndex];
+       157 +      srManager.recordReview(card.id, difficulty);
+       158 +  
+       159 +      // Move to next card
+       160 +      currentCardIndex++;
+       161 +      showCurrentCard();
+       162 +  }
+       163 +  
+       164 +  // Event listeners
+       165 +  showAnswerBtn.addEventListener('click', showAnswer);
+       166 +  
+       167 +  document.querySelectorAll('.difficulty-btn').forEach(
+           + btn => {
+       168 +      btn.addEventListener('click', (e) => {
+       169 +          const difficulty = 
+           + e.currentTarget.dataset.difficulty;
+       170 +          handleDifficultyClick(difficulty);
+       171 +      });
+       172 +  });
+       173 +  
+       174    // Keyboard navigation
+       175    document.addEventListener('keydown', (e) => {
+       176 -      if (e.key === 'ArrowLeft') {
+       177 -          updateCard('prev');
+       178 -      } else if (e.key === 'ArrowRight') {
+       179 -          updateCard('next');
+       180 -      } else if (e.key === ' ') {
+       176 +      if (e.key === ' ' && !isAnswerShown) {
+       177            e.preventDefault();
+       178 -          flashcard.classList.toggle('flipped');
+       178 +          showAnswer();
+       179 +      } else if (e.key === '1' && isAnswerShown) {
+       180 +          handleDifficultyClick('hard');
+       181 +      } else if (e.key === '2' && isAnswerShown) {
+       182 +          handleDifficultyClick('medium');
+       183 +      } else if (e.key === '3' && isAnswerShown) {
+       184 +          handleDifficultyClick('easy');
+       185        }
+       186    });
+       187    
+
+⏺ Now I need to add the initialization call and update the rest of the
+   code to work with the new system. Let me check what's at the bottom
+   of the file:
+
+⏺ Read(script.js)
+  ⎿  Read 98 lines
+
+⏺ Now I need to add the initialization call at the end of the file:
+
+⏺ Update(script.js)
+  ⎿  Updated script.js with 3 additions                  
+       294            element.style.transform = 
+             `translate(${xOffset}px, ${yOffset}px)`;
+       295        });
+       296    });
+       297 +  
+       298 +  // Initialize the spaced repetition session
+       299 +  initSession();
+
+⏺ Now let me add the CSS styling for the new UI elements:
+
+⏺ Read(styles.css)
+  ⎿  Read 460 lines
+
+⏺ Now let me add the CSS for the new spaced repetition UI elements:
+
+⏺ Update(styles.css)
+  ⎿  Updated styles.css with 93 additions               
+       280        align-items: center;
+       281        justify-content: center;
+       282        gap: 32px;
+       283 +      margin-bottom: 24px;
+       284    }
+       285    
+       286 +  .show-answer-btn {
+       287 +      background: var(--color-accent);
+       288 +      color: white;
+       289 +      border: none;
+       290 +      padding: 16px 48px;
+       291 +      font-size: 16px;
+       292 +      font-weight: 600;
+       293 +      border-radius: 12px;
+       294 +      cursor: pointer;
+       295 +      transition: var(--transition);
+       296 +      box-shadow: var(--shadow-md);
+       297 +  }
+       298 +  
+       299 +  .show-answer-btn:hover {
+       300 +      background: var(--color-accent-hover);
+       301 +      transform: translateY(-2px);
+       302 +      box-shadow: var(--shadow-lg);
+       303 +  }
+       304 +  
+       305 +  .difficulty-buttons {
+       306 +      display: flex;
+       307 +      align-items: center;
+       308 +      justify-content: center;
+       309 +      gap: 16px;
+       310 +      margin-bottom: 24px;
+       311 +      flex-wrap: wrap;
+       312 +  }
+       313 +  
+       314 +  .difficulty-btn {
+       315 +      background: var(--color-card-bg);
+       316 +      border: 2px solid var(--color-border);
+       317 +      padding: 16px 32px;
+       318 +      border-radius: 12px;
+       319 +      cursor: pointer;
+       320 +      transition: var(--transition);
+       321 +      display: flex;
+       322 +      flex-direction: column;
+       323 +      align-items: center;
+       324 +      gap: 4px;
+       325 +      min-width: 140px;
+       326 +  }
+       327 +  
+       328 +  .difficulty-btn:hover {
+       329 +      transform: translateY(-4px);
+       330 +      box-shadow: var(--shadow-md);
+       331 +  }
+       332 +  
+       333 +  .hard-btn:hover {
+       334 +      background: #ff4757;
+       335 +      border-color: #ff4757;
+       336 +      color: white;
+       337 +  }
+       338 +  
+       339 +  .medium-btn:hover {
+       340 +      background: #ffa502;
+       341 +      border-color: #ffa502;
+       342 +      color: white;
+       343 +  }
+       344 +  
+       345 +  .easy-btn:hover {
+       346 +      background: #2ed573;
+       347 +      border-color: #2ed573;
+       348 +      color: white;
+       349 +  }
+       350 +  
+       351 +  .btn-label {
+       352 +      font-weight: 600;
+       353 +      font-size: 16px;
+       354 +  }
+       355 +  
+       356 +  .btn-interval {
+       357 +      font-size: 12px;
+       358 +      opacity: 0.7;
+       359 +  }
+       360 +  
+       361 +  .due-cards-info {
+       362 +      color: var(--color-text-secondary);
+       363 +      font-size: 16px;
+       364 +      margin-bottom: 32px;
+       365 +      font-weight: 500;
+       366 +  }
+       367 +  
+       368 +  .session-progress {
+       369 +      margin-top: 16px;
+       370 +      color: var(--color-text-secondary);
+       371 +      font-size: 14px;
+       372 +  }
+       373 +  
+       374 +  .progress-text {
+       375 +      font-weight: 500;
+       376 +  }
+       377 +  
+       378    .control-btn {
+       379        background: var(--color-card-bg);
+       380        border: 2px solid var(--color-border);
+
+⏺ Now let me add responsive styles for the new elements:
+
+⏺ Update(styles.css)
+  ⎿  Updated styles.css with 15 additions    
+       538        .stat-number {
+       539            font-size: 48px;
+       540        }
+       541 +  
+       542 +      .difficulty-buttons {
+       543 +          flex-direction: column;
+       544 +          gap: 12px;
+       545 +      }
+       546 +  
+       547 +      .difficulty-btn {
+       548 +          width: 100%;
+       549 +          max-width: 300px;
+       550 +      }
+       551 +  
+       552 +      .show-answer-btn {
+       553 +          width: 100%;
+       554 +          max-width: 300px;
+       555 +      }
+       556    }
+       557    
+       558    /* Smooth Scrolling */
+
+⏺ Perfect! I've successfully implemented a complete spaced repetition
+  system for your flashcard website. Here's what I've built:
+
+  Features Implemented:
+
+  1. Show Answer Button
+
+  - Replaced the click-to-flip interaction with a prominent "Show
+  Answer" button
+  - Clean, accessible interface
+
+  2. Difficulty Rating System
+
+  - Three buttons appear after showing the answer: Hard, Medium, Easy
+  - Each button shows the review interval:
+    - Hard → 1 day
+    - Medium → 2 days
+    - Easy → 4 days
+
+  3. Spaced Repetition Algorithm
+
+  - Uses localStorage to persist card progress across sessions
+  - Tracks next review date for each card
+  - Cards are only shown when they're due for review
+
+  4. Session Management
+
+  - Only displays cards that are due today
+  - Shows progress: "Card X of Y"
+  - Displays total due cards at the start
+  - Shows "Session complete! Great work!" when done
+  - Shows "No cards due! Come back later." when no reviews needed
+
+  5. Keyboard Shortcuts
+
+  - Space → Show answer
+  - 1 → Mark as Hard
+  - 2 → Mark as Medium
+  - 3 → Mark as Easy
+
+  6. Responsive Design
+
+  - Mobile-friendly button layouts
+  - Smooth animations and transitions
+  - Color-coded difficulty buttons (red for hard, orange for medium,
+  green for easy)
+
+  The system automatically initializes all cards as due on first
+  visit, then manages the review schedule based on your ratings. All
+  progress is saved in the browser's localStorage, so your review
+  schedule persists between sessions!
