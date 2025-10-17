@@ -16,29 +16,61 @@
             Back to Papers
         </a>
 
-        <div class="paper-header" id="paperHeader">
-            <!-- Paper info will be loaded here -->
-        </div>
-
-        <div class="stats-overview" id="statsOverview">
-            <!-- Stats will be loaded here -->
-        </div>
-
-        <div class="questions-section">
-            <div class="section-header">
-                <h2 class="section-title">Question Breakdown</h2>
-                <button class="add-question-btn" onclick="addQuestion()">+ Add Question</button>
+        <div class="feedback-sheet">
+            <div class="sheet-header">
+                <h1>AQA A-Level Chemistry Paper Feedback Sheet</h1>
+                <div class="student-info">
+                    <div class="info-field">
+                        <label>Student Name:</label>
+                        <input type="text" id="studentName" class="editable-field" placeholder="Enter your name">
+                    </div>
+                    <div class="info-field">
+                        <label>Date:</label>
+                        <input type="date" id="testDate" class="editable-field">
+                    </div>
+                </div>
+                <div class="paper-details" id="paperDetails">
+                    <!-- Paper info will be loaded here -->
+                </div>
+                <div class="total-marks">
+                    <label>Total Mark:</label>
+                    <span id="totalScore" class="score-display">0</span>
+                    <span class="max-marks">/ <span id="maxMarks">90</span></span>
+                    <span class="percentage-badge" id="percentageBadge">0%</span>
+                </div>
             </div>
 
-            <div id="questionsContainer">
-                <!-- Questions will be loaded here -->
+            <div class="topics-table">
+                <table class="feedback-table">
+                    <thead>
+                        <tr>
+                            <th>Section</th>
+                            <th>Topic</th>
+                            <th>Marks</th>
+                            <th>Areas to Work On</th>
+                        </tr>
+                    </thead>
+                    <tbody id="topicsTableBody">
+                        <!-- Topics will be loaded here -->
+                    </tbody>
+                </table>
             </div>
-        </div>
 
-        <div class="action-buttons">
-            <button class="btn btn-primary" onclick="saveProgress()">💾 Save Progress</button>
-            <button class="btn btn-secondary" onclick="exportData()">📥 Export Data</button>
-            <button class="btn btn-danger" onclick="clearProgress()">🗑️ Clear All</button>
+            <div class="feedback-section">
+                <h2>Overall Feedback:</h2>
+                <textarea id="overallFeedback" class="feedback-textarea" placeholder="Enter overall feedback here..."></textarea>
+            </div>
+
+            <div class="action-plan-section">
+                <h2>Action Plan:</h2>
+                <textarea id="actionPlan" class="feedback-textarea" placeholder="Enter action plan here..."></textarea>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="saveProgress()">Save Progress</button>
+                <button class="btn btn-secondary" onclick="exportData()">Export as PDF</button>
+                <button class="btn btn-danger" onclick="clearProgress()">Clear All</button>
+            </div>
         </div>
     </div>
 
@@ -61,17 +93,17 @@
                 "maxMarks": 105,
                 "duration": 120,
                 "topics": [
-                    "Atomic Structure",
-                    "Amount of Substance",
-                    "Bonding",
-                    "Energetics",
-                    "Kinetics",
-                    "Chemical Equilibria",
-                    "Oxidation & Reduction",
-                    "Thermodynamics",
-                    "Rate Equations",
-                    "Equilibrium Constant",
-                    "Acids & Bases"
+                    { "section": "3.1.1", "name": "Atomic Structure", "maxMarks": 10 },
+                    { "section": "3.1.2", "name": "Amount of Substance", "maxMarks": 8 },
+                    { "section": "3.1.3", "name": "Bonding", "maxMarks": 12 },
+                    { "section": "3.1.4", "name": "Energetics", "maxMarks": 10 },
+                    { "section": "3.1.5", "name": "Kinetics", "maxMarks": 10 },
+                    { "section": "3.1.6", "name": "Chemical Equilibria", "maxMarks": 10 },
+                    { "section": "3.1.7", "name": "Oxidation & Reduction", "maxMarks": 10 },
+                    { "section": "3.1.8", "name": "Thermodynamics", "maxMarks": 10 },
+                    { "section": "3.1.9", "name": "Rate Equations", "maxMarks": 10 },
+                    { "section": "3.1.10", "name": "Equilibrium Constant Kp", "maxMarks": 8 },
+                    { "section": "3.1.11", "name": "Electrode Potentials", "maxMarks": 7 }
                 ]
             },
             {
@@ -86,17 +118,17 @@
                 "maxMarks": 105,
                 "duration": 120,
                 "topics": [
-                    "Atomic Structure",
-                    "Amount of Substance",
-                    "Bonding",
-                    "Energetics",
-                    "Kinetics",
-                    "Chemical Equilibria",
-                    "Oxidation & Reduction",
-                    "Thermodynamics",
-                    "Rate Equations",
-                    "Equilibrium Constant",
-                    "Acids & Bases"
+                    { "section": "3.1.1", "name": "Atomic Structure", "maxMarks": 10 },
+                    { "section": "3.1.2", "name": "Amount of Substance", "maxMarks": 8 },
+                    { "section": "3.1.3", "name": "Bonding", "maxMarks": 12 },
+                    { "section": "3.1.4", "name": "Energetics", "maxMarks": 10 },
+                    { "section": "3.1.5", "name": "Kinetics", "maxMarks": 10 },
+                    { "section": "3.1.6", "name": "Chemical Equilibria", "maxMarks": 10 },
+                    { "section": "3.1.7", "name": "Oxidation & Reduction", "maxMarks": 10 },
+                    { "section": "3.1.8", "name": "Thermodynamics", "maxMarks": 10 },
+                    { "section": "3.1.9", "name": "Rate Equations", "maxMarks": 10 },
+                    { "section": "3.1.10", "name": "Equilibrium Constant Kp", "maxMarks": 8 },
+                    { "section": "3.1.11", "name": "Acids & Bases", "maxMarks": 7 }
                 ]
             },
             {
@@ -111,17 +143,17 @@
                 "maxMarks": 105,
                 "duration": 120,
                 "topics": [
-                    "Atomic Structure",
-                    "Amount of Substance",
-                    "Bonding",
-                    "Energetics",
-                    "Kinetics",
-                    "Chemical Equilibria",
-                    "Oxidation & Reduction",
-                    "Thermodynamics",
-                    "Rate Equations",
-                    "Equilibrium Constant",
-                    "Acids & Bases"
+                    { "section": "3.1.1", "name": "Atomic Structure", "maxMarks": 10 },
+                    { "section": "3.1.2", "name": "Amount of Substance", "maxMarks": 8 },
+                    { "section": "3.1.3", "name": "Bonding", "maxMarks": 12 },
+                    { "section": "3.1.4", "name": "Energetics", "maxMarks": 10 },
+                    { "section": "3.1.5", "name": "Kinetics", "maxMarks": 10 },
+                    { "section": "3.1.6", "name": "Chemical Equilibria", "maxMarks": 10 },
+                    { "section": "3.1.7", "name": "Oxidation & Reduction", "maxMarks": 10 },
+                    { "section": "3.1.8", "name": "Thermodynamics", "maxMarks": 10 },
+                    { "section": "3.1.9", "name": "Rate Equations", "maxMarks": 10 },
+                    { "section": "3.1.10", "name": "Equilibrium Constant Kp", "maxMarks": 8 },
+                    { "section": "3.1.11", "name": "Acids & Bases", "maxMarks": 7 }
                 ]
             },
             {
@@ -136,17 +168,17 @@
                 "maxMarks": 105,
                 "duration": 120,
                 "topics": [
-                    "Atomic Structure",
-                    "Amount of Substance",
-                    "Bonding",
-                    "Energetics",
-                    "Kinetics",
-                    "Chemical Equilibria",
-                    "Oxidation & Reduction",
-                    "Thermodynamics",
-                    "Rate Equations",
-                    "Equilibrium Constant",
-                    "Acids & Bases"
+                    { "section": "3.1.1", "name": "Atomic Structure", "maxMarks": 10 },
+                    { "section": "3.1.2", "name": "Amount of Substance", "maxMarks": 8 },
+                    { "section": "3.1.3", "name": "Bonding", "maxMarks": 12 },
+                    { "section": "3.1.4", "name": "Energetics", "maxMarks": 10 },
+                    { "section": "3.1.5", "name": "Kinetics", "maxMarks": 10 },
+                    { "section": "3.1.6", "name": "Chemical Equilibria", "maxMarks": 10 },
+                    { "section": "3.1.7", "name": "Oxidation & Reduction", "maxMarks": 10 },
+                    { "section": "3.1.8", "name": "Thermodynamics", "maxMarks": 10 },
+                    { "section": "3.1.9", "name": "Rate Equations", "maxMarks": 10 },
+                    { "section": "3.1.10", "name": "Equilibrium Constant Kp", "maxMarks": 8 },
+                    { "section": "3.1.11", "name": "Acids & Bases", "maxMarks": 7 }
                 ]
             },
             {
@@ -158,19 +190,22 @@
                 "session": "November",
                 "unit": "Paper 2",
                 "title": "Organic & Inorganic Chemistry",
-                "maxMarks": 105,
+                "maxMarks": 90,
                 "duration": 120,
                 "topics": [
-                    "Periodicity",
-                    "Group 2",
-                    "Group 7",
-                    "Transition Metals",
-                    "Organic Analysis",
-                    "Alkanes",
-                    "Alkenes",
-                    "Alcohols",
-                    "Organic Synthesis",
-                    "Analytical Techniques"
+                    { "section": "3.1.10", "name": "Equilibrium Constant Kp", "maxMarks": 7 },
+                    { "section": "3.1.11", "name": "Electrode Potentials and Electrochemical Cells", "maxMarks": 8 },
+                    { "section": "3.1.12", "name": "Acids and Bases", "maxMarks": 8 },
+                    { "section": "3.2.1", "name": "Optical Isomerism", "maxMarks": 7 },
+                    { "section": "3.2.2", "name": "Aldehydes and Ketones", "maxMarks": 8 },
+                    { "section": "3.2.3", "name": "Carboxylic Acids and Derivatives", "maxMarks": 8 },
+                    { "section": "3.2.4", "name": "Aromatic Chemistry", "maxMarks": 9 },
+                    { "section": "3.2.5", "name": "Amines", "maxMarks": 7 },
+                    { "section": "3.2.6", "name": "Polymers", "maxMarks": 7 },
+                    { "section": "3.2.7", "name": "Amino Acids, Proteins and DNA", "maxMarks": 7 },
+                    { "section": "3.2.8", "name": "Organic Synthesis", "maxMarks": 7 },
+                    { "section": "3.2.9", "name": "Nuclear Magnetic Resonance Spectroscopy (NMR)", "maxMarks": 7 },
+                    { "section": "3.2.10", "name": "Chromatography", "maxMarks": 0 }
                 ]
             },
             {
@@ -182,35 +217,32 @@
                 "session": "November",
                 "unit": "Paper 2",
                 "title": "Organic & Inorganic Chemistry",
-                "maxMarks": 105,
+                "maxMarks": 90,
                 "duration": 120,
                 "topics": [
-                    "Periodicity",
-                    "Group 2",
-                    "Group 7",
-                    "Transition Metals",
-                    "Organic Analysis",
-                    "Alkanes",
-                    "Alkenes",
-                    "Alcohols",
-                    "Organic Synthesis",
-                    "Analytical Techniques"
+                    { "section": "3.1.10", "name": "Equilibrium Constant Kp", "maxMarks": 7 },
+                    { "section": "3.1.11", "name": "Electrode Potentials and Electrochemical Cells", "maxMarks": 8 },
+                    { "section": "3.1.12", "name": "Acids and Bases", "maxMarks": 8 },
+                    { "section": "3.2.1", "name": "Optical Isomerism", "maxMarks": 7 },
+                    { "section": "3.2.2", "name": "Aldehydes and Ketones", "maxMarks": 8 },
+                    { "section": "3.2.3", "name": "Carboxylic Acids and Derivatives", "maxMarks": 8 },
+                    { "section": "3.2.4", "name": "Aromatic Chemistry", "maxMarks": 9 },
+                    { "section": "3.2.5", "name": "Amines", "maxMarks": 7 },
+                    { "section": "3.2.6", "name": "Polymers", "maxMarks": 7 },
+                    { "section": "3.2.7", "name": "Amino Acids, Proteins and DNA", "maxMarks": 7 },
+                    { "section": "3.2.8", "name": "Organic Synthesis", "maxMarks": 7 },
+                    { "section": "3.2.9", "name": "Nuclear Magnetic Resonance Spectroscopy (NMR)", "maxMarks": 7 },
+                    { "section": "3.2.10", "name": "Chromatography", "maxMarks": 0 }
                 ]
             }
         ];
 
         let currentPaper = null;
-        let questions = [];
-
-        // Grade boundaries for single paper (out of 105 marks)
-        const PAPER_GRADE_BOUNDARIES = {
-            'A*': 84,  // 80% of 105
-            'A': 66,   // 63% of 105
-            'B': 54,   // 51% of 105
-            'C': 42,   // 40% of 105
-            'D': 30,   // 29% of 105
-            'E': 18    // 17% of 105
-        };
+        let topicScores = {};
+        let studentName = '';
+        let testDate = '';
+        let overallFeedback = '';
+        let actionPlan = '';
 
         // Initialize
         function init() {
@@ -228,220 +260,186 @@
             }
 
             loadProgress();
-            renderPaperHeader();
-            renderStats();
-            renderQuestions();
+            renderPaperDetails();
+            renderTopicsTable();
+            updateTotalScore();
+            setupEventListeners();
         }
 
         // Load progress from localStorage
         function loadProgress() {
-            const saved = localStorage.getItem(`paper-progress-${paperId}`);
+            const saved = localStorage.getItem(`paper-feedback-${paperId}`);
             if (saved) {
-                questions = JSON.parse(saved);
+                const data = JSON.parse(saved);
+                topicScores = data.topicScores || {};
+                studentName = data.studentName || '';
+                testDate = data.testDate || '';
+                overallFeedback = data.overallFeedback || '';
+                actionPlan = data.actionPlan || '';
+
+                // Populate form fields
+                document.getElementById('studentName').value = studentName;
+                document.getElementById('testDate').value = testDate;
+                document.getElementById('overallFeedback').value = overallFeedback;
+                document.getElementById('actionPlan').value = actionPlan;
             } else {
-                // Initialize with empty questions
-                questions = [];
+                // Initialize empty topic scores
+                topicScores = {};
+                currentPaper.topics.forEach(topic => {
+                    topicScores[topic.section] = {
+                        score: 0,
+                        notes: ''
+                    };
+                });
             }
         }
 
         // Save progress to localStorage
         function saveProgress() {
-            localStorage.setItem(`paper-progress-${paperId}`, JSON.stringify(questions));
+            // Get current values from form
+            studentName = document.getElementById('studentName').value;
+            testDate = document.getElementById('testDate').value;
+            overallFeedback = document.getElementById('overallFeedback').value;
+            actionPlan = document.getElementById('actionPlan').value;
 
-            // Also save to global analytics
-            updateGlobalAnalytics();
-
-            alert('Progress saved successfully!');
-        }
-
-        // Update global analytics
-        function updateGlobalAnalytics() {
-            const analytics = JSON.parse(localStorage.getItem('chemistry-analytics') || '{}');
-
-            const totalMarks = questions.reduce((sum, q) => sum + (parseFloat(q.maxMarks) || 0), 0);
-            const earnedMarks = questions.reduce((sum, q) => sum + (parseFloat(q.earnedMarks) || 0), 0);
-
-            analytics[paperId] = {
-                paper: currentPaper,
-                questions: questions,
-                totalMarks: totalMarks,
-                earnedMarks: earnedMarks,
-                percentage: totalMarks > 0 ? (earnedMarks / totalMarks * 100).toFixed(1) : 0,
+            const data = {
+                topicScores,
+                studentName,
+                testDate,
+                overallFeedback,
+                actionPlan,
                 lastUpdated: new Date().toISOString()
             };
 
-            localStorage.setItem('chemistry-analytics', JSON.stringify(analytics));
+            localStorage.setItem(`paper-feedback-${paperId}`, JSON.stringify(data));
+            alert('Progress saved successfully!');
         }
 
-        // Render paper header
-        function renderPaperHeader() {
-            document.getElementById('paperHeader').innerHTML = `
-                <h1>${currentPaper.title}</h1>
-                <div class="paper-info">
-                    <div class="info-item">
-                        <span class="info-label">Paper Code</span>
-                        <span class="info-value">${currentPaper.paperCode}</span>
+        // Render paper details
+        function renderPaperDetails() {
+            document.getElementById('paperDetails').innerHTML = `
+                <div style="display: flex; gap: 32px; margin-top: 16px; flex-wrap: wrap;">
+                    <div class="info-field">
+                        <strong>Paper:</strong> ${currentPaper.paperCode}
                     </div>
-                    <div class="info-item">
-                        <span class="info-label">Session</span>
-                        <span class="info-value">${currentPaper.session} ${currentPaper.year}</span>
+                    <div class="info-field">
+                        <strong>Session:</strong> ${currentPaper.session} ${currentPaper.year}
                     </div>
-                    <div class="info-item">
-                        <span class="info-label">Max Marks</span>
-                        <span class="info-value">${currentPaper.maxMarks}</span>
+                    <div class="info-field">
+                        <strong>Title:</strong> ${currentPaper.title}
                     </div>
                 </div>
             `;
+            document.getElementById('maxMarks').textContent = currentPaper.maxMarks;
         }
 
-        // Calculate stats
-        function calculateStats() {
-            const totalMarks = questions.reduce((sum, q) => sum + (parseFloat(q.maxMarks) || 0), 0);
-            const earnedMarks = questions.reduce((sum, q) => sum + (parseFloat(q.earnedMarks) || 0), 0);
-            const percentage = totalMarks > 0 ? (earnedMarks / totalMarks * 100) : 0;
-
-            let grade = 'N/A';
-            let gradeClass = '';
-
-            if (earnedMarks >= PAPER_GRADE_BOUNDARIES['A*']) {
-                grade = 'A*';
-                gradeClass = 'grade-a';
-            } else if (earnedMarks >= PAPER_GRADE_BOUNDARIES['A']) {
-                grade = 'A';
-                gradeClass = 'grade-a';
-            } else if (earnedMarks >= PAPER_GRADE_BOUNDARIES['B']) {
-                grade = 'B';
-                gradeClass = 'grade-b';
-            } else if (earnedMarks >= PAPER_GRADE_BOUNDARIES['C']) {
-                grade = 'C';
-                gradeClass = 'grade-c';
-            } else if (earnedMarks >= PAPER_GRADE_BOUNDARIES['D']) {
-                grade = 'D';
-                gradeClass = 'grade-d';
-            } else if (earnedMarks >= PAPER_GRADE_BOUNDARIES['E']) {
-                grade = 'E';
-                gradeClass = 'grade-e';
-            }
-
-            return { totalMarks, earnedMarks, percentage, grade, gradeClass };
-        }
-
-        // Render stats
-        function renderStats() {
-            const stats = calculateStats();
-
-            document.getElementById('statsOverview').innerHTML = `
-                <div class="stat-box">
-                    <div class="stat-value">${questions.length}</div>
-                    <div class="stat-label">Questions Tracked</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-value">${stats.earnedMarks.toFixed(1)} / ${stats.totalMarks}</div>
-                    <div class="stat-label">Total Marks</div>
-                </div>
-                <div class="stat-box highlight">
-                    <div class="stat-value">${stats.percentage.toFixed(1)}%</div>
-                    <div class="stat-label">Percentage</div>
-                </div>
-                <div class="stat-box ${stats.gradeClass}">
-                    <div class="stat-value">${stats.grade}</div>
-                    <div class="stat-label">Predicted Grade</div>
-                </div>
-            `;
-        }
-
-        // Add question
-        function addQuestion() {
-            const questionNum = questions.length + 1;
-            questions.push({
-                number: questionNum,
-                topic: currentPaper.topics[0] || 'General',
-                maxMarks: 0,
-                earnedMarks: 0
-            });
-            renderQuestions();
-            renderStats();
-        }
-
-        // Delete question
-        function deleteQuestion(index) {
-            if (confirm('Are you sure you want to delete this question?')) {
-                questions.splice(index, 1);
-                // Renumber questions
-                questions.forEach((q, i) => q.number = i + 1);
-                renderQuestions();
-                renderStats();
-            }
-        }
-
-        // Update question
-        function updateQuestion(index, field, value) {
-            questions[index][field] = value;
-            renderStats();
-        }
-
-        // Render questions
-        function renderQuestions() {
-            const container = document.getElementById('questionsContainer');
-
-            if (questions.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <p>No questions added yet.</p>
-                        <p>Click "Add Question" to start tracking your progress!</p>
-                    </div>
+        // Render topics table
+        function renderTopicsTable() {
+            const tbody = document.getElementById('topicsTableBody');
+            tbody.innerHTML = currentPaper.topics.map(topic => {
+                const score = topicScores[topic.section] || { score: 0, notes: '' };
+                return `
+                    <tr class="topic-row">
+                        <td class="section-cell">${topic.section}</td>
+                        <td class="topic-cell">${topic.name}</td>
+                        <td class="marks-cell">
+                            <input
+                                type="number"
+                                class="score-input"
+                                value="${score.score || 0}"
+                                max="${topic.maxMarks}"
+                                min="0"
+                                step="0.5"
+                                data-section="${topic.section}"
+                                onchange="updateTopicScore('${topic.section}', this.value)"
+                            />
+                            <span class="max-marks-label">/ ${topic.maxMarks}</span>
+                        </td>
+                        <td class="notes-cell">
+                            <input
+                                type="text"
+                                class="notes-input"
+                                value="${score.notes || ''}"
+                                placeholder="Enter areas to work on..."
+                                data-section="${topic.section}"
+                                onchange="updateTopicNotes('${topic.section}', this.value)"
+                            />
+                        </td>
+                    </tr>
                 `;
-                return;
-            }
-
-            container.innerHTML = `
-                <div class="questions-grid">
-                    ${questions.map((q, index) => {
-                        const percentage = q.maxMarks > 0 ? (q.earnedMarks / q.maxMarks * 100) : 0;
-                        let percentClass = 'percentage-display';
-                        if (percentage >= 70) percentClass += ' good';
-                        else if (percentage >= 40) percentClass += ' okay';
-                        else if (percentage > 0) percentClass += ' poor';
-
-                        return `
-                            <div class="question-row">
-                                <div class="question-number">Q${q.number}</div>
-                                <select class="topic-select" onchange="updateQuestion(${index}, 'topic', this.value)">
-                                    ${currentPaper.topics.map(topic =>
-                                        `<option value="${topic}" ${q.topic === topic ? 'selected' : ''}>${topic}</option>`
-                                    ).join('')}
-                                </select>
-                                <div class="marks-group">
-                                    <div class="marks-label">Max Marks</div>
-                                    <input type="number" class="marks-input" value="${q.maxMarks}"
-                                        onchange="updateQuestion(${index}, 'maxMarks', parseFloat(this.value) || 0)"
-                                        min="0" step="0.5" placeholder="0">
-                                </div>
-                                <div class="marks-group">
-                                    <div class="marks-label">Your Marks</div>
-                                    <input type="number" class="marks-input" value="${q.earnedMarks}"
-                                        onchange="updateQuestion(${index}, 'earnedMarks', parseFloat(this.value) || 0)"
-                                        min="0" step="0.5" placeholder="0">
-                                </div>
-                                <div class="${percentClass}">
-                                    ${percentage > 0 ? percentage.toFixed(0) + '%' : '-'}
-                                </div>
-                                <button class="delete-btn" onclick="deleteQuestion(${index})" title="Delete question">
-                                    🗑️
-                                </button>
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
-            `;
+            }).join('');
         }
 
-        // Export data as JSON
+        // Update topic score
+        function updateTopicScore(section, value) {
+            if (!topicScores[section]) {
+                topicScores[section] = { score: 0, notes: '' };
+            }
+            topicScores[section].score = parseFloat(value) || 0;
+            updateTotalScore();
+        }
+
+        // Update topic notes
+        function updateTopicNotes(section, value) {
+            if (!topicScores[section]) {
+                topicScores[section] = { score: 0, notes: '' };
+            }
+            topicScores[section].notes = value;
+        }
+
+        // Update total score display
+        function updateTotalScore() {
+            let totalScore = 0;
+            currentPaper.topics.forEach(topic => {
+                const score = topicScores[topic.section];
+                if (score && score.score) {
+                    totalScore += parseFloat(score.score);
+                }
+            });
+
+            const maxMarks = currentPaper.maxMarks;
+            const percentage = maxMarks > 0 ? (totalScore / maxMarks * 100) : 0;
+
+            document.getElementById('totalScore').textContent = totalScore.toFixed(1);
+            const badge = document.getElementById('percentageBadge');
+            badge.textContent = percentage.toFixed(1) + '%';
+
+            // Update badge color based on percentage
+            badge.style.background = getGradeColor(percentage);
+        }
+
+        // Get grade color based on percentage
+        function getGradeColor(percentage) {
+            if (percentage >= 80) return 'linear-gradient(135deg, #2ed573 0%, #26de81 100%)';
+            if (percentage >= 70) return 'linear-gradient(135deg, #26de81 0%, #2ed573 100%)';
+            if (percentage >= 60) return 'linear-gradient(135deg, #ffa502 0%, #ff7f50 100%)';
+            if (percentage >= 50) return 'linear-gradient(135deg, #ff7f50 0%, #ff6348 100%)';
+            return 'linear-gradient(135deg, #ff6348 0%, #ff4757 100%)';
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Auto-save on input change
+            const inputs = document.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                if (input.id === 'studentName' || input.id === 'testDate') {
+                    input.addEventListener('change', () => {
+                        studentName = document.getElementById('studentName').value;
+                        testDate = document.getElementById('testDate').value;
+                    });
+                }
+            });
+        }
+
+        // Export data as PDF (simplified version - exports as text)
         function exportData() {
             const data = {
                 paper: currentPaper,
-                questions: questions,
-                stats: calculateStats(),
+                studentName,
+                testDate,
+                topicScores,
+                overallFeedback: document.getElementById('overallFeedback').value,
+                actionPlan: document.getElementById('actionPlan').value,
                 exportDate: new Date().toISOString()
             };
 
@@ -449,17 +447,24 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `${paperId}-progress.json`;
+            a.download = `${paperId}-feedback-${new Date().toISOString().split('T')[0]}.json`;
             a.click();
         }
 
         // Clear progress
         function clearProgress() {
             if (confirm('Are you sure you want to clear all progress for this paper? This cannot be undone!')) {
-                questions = [];
-                localStorage.removeItem(`paper-progress-${paperId}`);
-                renderQuestions();
-                renderStats();
+                topicScores = {};
+                currentPaper.topics.forEach(topic => {
+                    topicScores[topic.section] = { score: 0, notes: '' };
+                });
+                document.getElementById('studentName').value = '';
+                document.getElementById('testDate').value = '';
+                document.getElementById('overallFeedback').value = '';
+                document.getElementById('actionPlan').value = '';
+                localStorage.removeItem(`paper-feedback-${paperId}`);
+                renderTopicsTable();
+                updateTotalScore();
             }
         }
 

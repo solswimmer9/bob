@@ -115,6 +115,71 @@ document.querySelector('.cta-button').addEventListener('click', () => {
     });
 });
 
+// Study Tracker - Update display on home page
+function updateTrackerDisplay() {
+    // Check if we're on the home page with tracker elements
+    const trackerCards = document.getElementById('trackerCards');
+    const trackerTime = document.getElementById('trackerTime');
+    const trackerAvg = document.getElementById('trackerAvg');
+
+    if (!trackerCards || !trackerTime || !trackerAvg) return;
+
+    // Get today's date key
+    const getTodayKey = () => {
+        const now = new Date();
+        return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    };
+
+    // Load data from localStorage
+    const saved = localStorage.getItem('studyTrackerData');
+    let data = {};
+    if (saved) {
+        data = JSON.parse(saved);
+    }
+
+    const today = getTodayKey();
+    const todayData = data[today] || { cards: 0, timeSpent: 0, startTime: null };
+
+    // Calculate total time including active session
+    let totalTime = todayData.timeSpent || 0;
+    if (todayData.startTime) {
+        totalTime += Math.floor((Date.now() - todayData.startTime) / 1000);
+    }
+
+    // Format time
+    const formatTime = (seconds) => {
+        if (seconds < 60) {
+            return `${seconds}s`;
+        }
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        if (minutes < 60) {
+            return `${minutes}m ${secs}s`;
+        }
+        const hours = Math.floor(minutes / 60);
+        const mins = minutes % 60;
+        return `${hours}h ${mins}m`;
+    };
+
+    // Update display
+    trackerCards.textContent = todayData.cards || 0;
+    trackerTime.textContent = formatTime(totalTime);
+
+    // Calculate and display average
+    if (todayData.cards > 0) {
+        const avgSeconds = (totalTime / todayData.cards).toFixed(1);
+        trackerAvg.textContent = `${avgSeconds}s/card`;
+    } else {
+        trackerAvg.textContent = '0s/card';
+    }
+}
+
+// Update tracker immediately and every 5 seconds
+if (document.getElementById('trackerCards')) {
+    updateTrackerDisplay();
+    setInterval(updateTrackerDisplay, 5000);
+}
+
 // Intersection Observer for scroll animations
 const observerOptions = {
     threshold: 0.1,

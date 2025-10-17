@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Physical Chemistry - A Level Flashcards</title>
+    <title>Physical Chemistry Topics - A Level Flashcards</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -19,83 +19,27 @@
                     </svg>
                 </div>
                 <h1 class="hero-title">
-                    <span class="fade-in-up">Physical</span>
-                    <span class="fade-in-up delay-1">Chemistry</span>
+                    <span class="fade-in-up">Physical Chemistry</span>
+                    <span class="fade-in-up delay-1">Topics</span>
                 </h1>
-                <p class="hero-subtitle fade-in-up delay-2">Understand thermodynamics, kinetics, and equilibria</p>
-                <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-                    <a href="physical-topics.html" class="cta-button fade-in-up delay-3">Browse Topics</a>
-                    <a href="index.html" class="cta-button fade-in-up delay-3" style="background: transparent; border: 2px solid var(--color-accent); color: var(--color-accent);">Back to Home</a>
-                </div>
+                <p class="hero-subtitle fade-in-up delay-2">Select a topic to begin studying</p>
+                <a href="physical.html" class="cta-button fade-in-up delay-3">Back to Physical Chemistry</a>
             </div>
 
             <!-- Floating Elements -->
             <div class="floating-elements">
                 <div class="float-element element-1">ΔH</div>
-                <div class="float-element element-2">Kₚ</div>
+                <div class="float-element element-2">Kc</div>
                 <div class="float-element element-3">ΔG</div>
                 <div class="float-element element-4">pH</div>
                 <div class="float-element element-5">ΔS</div>
             </div>
         </header>
 
-        <!-- Flashcard Section with Spaced Repetition -->
-        <section class="demo-section">
-            <h2 class="section-title">Physical Chemistry Flashcards</h2>
-            <p class="due-cards-info" id="progress">Loading cards...</p>
-
-            <div class="flashcard-container">
-                <div class="flashcard" id="flashcard">
-                    <div class="flashcard-inner">
-                        <div class="flashcard-front">
-                            <span class="card-label">Question</span>
-                            <h3 id="question">Loading...</h3>
-                        </div>
-                        <div class="flashcard-back">
-                            <span class="card-label">Answer</span>
-                            <h3 id="answer">Loading...</h3>
-                            <p class="card-explanation" id="explanation"></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Show Answer Button -->
-            <div class="card-controls">
-                <button class="show-answer-btn" id="showAnswerBtn">Show Answer</button>
-            </div>
-
-            <!-- Difficulty Rating Buttons (hidden initially) -->
-            <div class="difficulty-buttons" id="difficultyButtons" style="display: none;">
-                <button class="difficulty-btn hard-btn" data-difficulty="hard">
-                    <span class="btn-label">Hard</span>
-                    <span class="btn-interval">1 day</span>
-                </button>
-                <button class="difficulty-btn medium-btn" data-difficulty="medium">
-                    <span class="btn-label">Medium</span>
-                    <span class="btn-interval">2 days</span>
-                </button>
-                <button class="difficulty-btn easy-btn" data-difficulty="easy">
-                    <span class="btn-label">Easy</span>
-                    <span class="btn-interval">4 days</span>
-                </button>
-            </div>
-
-            <!-- Session Progress -->
-            <div class="session-progress" id="sessionProgress">
-                <span class="progress-text">Card <span id="currentCardNum">1</span> of <span id="totalDueCards">0</span></span>
-            </div>
-
-            <!-- Keyboard Shortcuts Hint -->
-            <div class="keyboard-hint" style="margin-top: 20px; text-align: center; opacity: 0.6; font-size: 0.9em;">
-                <p>Keyboard shortcuts: Space/Enter to show answer | 1 = Hard | 2 = Medium | 3 = Easy</p>
-            </div>
-        </section>
-
-        <!-- Topics Covered Section -->
-        <section class="features" style="padding-top: 60px;">
-            <h2 class="section-title" style="text-align: center; margin-bottom: 48px;">AQA Physical Chemistry Topics</h2>
+        <!-- Topics Grid -->
+        <section class="features">
             <div class="feature-grid">
+                <!-- Topic 1: Atomic Structure -->
                 <a href="physical-atomic.html" class="feature-card">
                     <div class="feature-icon">
                         <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
@@ -107,6 +51,7 @@
                     <p>Shells, orbitals, ionization energy, mass spectrometry</p>
                 </a>
 
+                <!-- Topic 2: Amount of Substance -->
                 <a href="physical-amount.html" class="feature-card">
                     <div class="feature-icon">
                         <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
@@ -119,6 +64,7 @@
                     <p>Moles, equations, concentration, ideal gas equation</p>
                 </a>
 
+                <!-- Topic 3: Bonding -->
                 <a href="physical-bonding.html" class="feature-card">
                     <div class="feature-icon">
                         <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
@@ -130,6 +76,7 @@
                     <p>Ionic, covalent, metallic bonding, shapes of molecules</p>
                 </a>
 
+                <!-- Topic 4: Energetics -->
                 <a href="physical-energetics.html" class="feature-card">
                     <div class="feature-icon">
                         <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
@@ -140,6 +87,7 @@
                     <p>Enthalpy changes, Hess's law, bond enthalpies</p>
                 </a>
 
+                <!-- Topic 5: Kinetics -->
                 <a href="physical-kinetics.html" class="feature-card">
                     <div class="feature-icon">
                         <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
@@ -152,6 +100,7 @@
                     <p>Reaction rates, collision theory, catalysts</p>
                 </a>
 
+                <!-- Topic 6: Chemical Equilibria -->
                 <a href="physical-equilibria.html" class="feature-card">
                     <div class="feature-icon">
                         <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
@@ -162,6 +111,7 @@
                     <p>Le Chatelier's principle, Kc, Kp calculations</p>
                 </a>
 
+                <!-- Topic 7: Oxidation & Reduction -->
                 <a href="physical-redox.html" class="feature-card">
                     <div class="feature-icon">
                         <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
@@ -173,6 +123,7 @@
                     <p>Redox reactions, half equations, electrochemical cells</p>
                 </a>
 
+                <!-- Topic 8: Thermodynamics -->
                 <a href="physical-thermodynamics.html" class="feature-card">
                     <div class="feature-icon">
                         <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
@@ -183,6 +134,7 @@
                     <p>Entropy, free energy, spontaneous reactions</p>
                 </a>
 
+                <!-- Topic 9: Rate Equations -->
                 <a href="physical-rate-equations.html" class="feature-card">
                     <div class="feature-icon">
                         <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
@@ -197,6 +149,7 @@
                     <p>Rate constants, orders of reaction, Arrhenius equation</p>
                 </a>
 
+                <!-- Topic 10: Equilibrium Constant -->
                 <a href="physical-kc.html" class="feature-card">
                     <div class="feature-icon">
                         <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
@@ -208,6 +161,7 @@
                     <p>Kc, Kp, partial pressures, equilibrium calculations</p>
                 </a>
 
+                <!-- Topic 11: Acids & Bases -->
                 <a href="physical-acids.html" class="feature-card">
                     <div class="feature-icon">
                         <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
@@ -221,24 +175,6 @@
             </div>
         </section>
 
-        <!-- Stats Section -->
-        <section class="stats-section">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-number">60</div>
-                    <div class="stat-label">Physical Cards</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="totalDueDisplay">-</div>
-                    <div class="stat-label">Due Today</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">12</div>
-                    <div class="stat-label">Topics</div>
-                </div>
-            </div>
-        </section>
-
         <!-- Footer -->
         <footer class="footer">
             <p>Built for A-Level Chemistry Students</p>
@@ -246,8 +182,35 @@
         </footer>
     </div>
 
-    <!-- Link to the external JavaScript file with spaced repetition -->
-    <script src="spaced-repetition.js"></script>
-    <script src="physical.js"></script>
+    <script>
+        // Smooth scroll for CTA button
+        document.querySelector('.cta-button').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = 'physical.html';
+        });
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe feature cards
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+    </script>
 </body>
 </html>

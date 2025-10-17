@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Organic Chemistry - A Level Flashcards</title>
+    <title>Reactions & Mechanisms - Organic Chemistry</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -19,29 +19,26 @@
                     </svg>
                 </div>
                 <h1 class="hero-title">
-                    <span class="fade-in-up">Organic</span>
-                    <span class="fade-in-up delay-1">Chemistry</span>
+                    <span class="fade-in-up">Reactions &</span>
+                    <span class="fade-in-up delay-1">Mechanisms</span>
                 </h1>
-                <p class="hero-subtitle fade-in-up delay-2">Master mechanisms, nomenclature, and reactions</p>
-                <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-                    <a href="organic-topics.html" class="cta-button fade-in-up delay-3">Browse Topics</a>
-                    <a href="index.html" class="cta-button fade-in-up delay-3" style="background: transparent; border: 2px solid var(--color-accent); color: var(--color-accent);">Back to Home</a>
-                </div>
+                <p class="hero-subtitle fade-in-up delay-2">Master substitution, addition, elimination, and radical reactions</p>
+                <a href="organic-topics.html" class="nav-btn primary">Back to Topics</a>
             </div>
 
             <!-- Floating Elements -->
             <div class="floating-elements">
-                <div class="float-element element-1">CH₄</div>
-                <div class="float-element element-2">C₂H₄</div>
-                <div class="float-element element-3">COOH</div>
-                <div class="float-element element-4">C₂H₅OH</div>
-                <div class="float-element element-5">NH₃</div>
+                <div class="float-element element-1">SN1</div>
+                <div class="float-element element-2">SN2</div>
+                <div class="float-element element-3">E1</div>
+                <div class="float-element element-4">E2</div>
+                <div class="float-element element-5">δ+</div>
             </div>
         </header>
 
         <!-- Flashcard Section with Spaced Repetition -->
         <section class="demo-section">
-            <h2 class="section-title">Organic Chemistry Flashcards</h2>
+            <h2 class="section-title">Reactions & Mechanisms Flashcards</h2>
             <p class="due-cards-info" id="progress">Loading cards...</p>
 
             <div class="flashcard-container">
@@ -65,19 +62,22 @@
                 <button class="show-answer-btn" id="showAnswerBtn">Show Answer</button>
             </div>
 
-            <!-- Difficulty Rating Buttons (hidden initially) -->
+            <!-- Difficulty Rating Buttons -->
             <div class="difficulty-buttons" id="difficultyButtons" style="display: none;">
                 <button class="difficulty-btn hard-btn" data-difficulty="hard">
                     <span class="btn-label">Hard</span>
                     <span class="btn-interval">1 day</span>
+                    <span class="btn-shortcut">Press 1</span>
                 </button>
                 <button class="difficulty-btn medium-btn" data-difficulty="medium">
                     <span class="btn-label">Medium</span>
                     <span class="btn-interval">2 days</span>
+                    <span class="btn-shortcut">Press 2</span>
                 </button>
                 <button class="difficulty-btn easy-btn" data-difficulty="easy">
                     <span class="btn-label">Easy</span>
                     <span class="btn-interval">4 days</span>
+                    <span class="btn-shortcut">Press 3</span>
                 </button>
             </div>
 
@@ -85,19 +85,14 @@
             <div class="session-progress" id="sessionProgress">
                 <span class="progress-text">Card <span id="currentCardNum">1</span> of <span id="totalDueCards">0</span></span>
             </div>
-
-            <!-- Keyboard Shortcuts Hint -->
-            <div class="keyboard-hint" style="margin-top: 20px; text-align: center; opacity: 0.6; font-size: 0.9em;">
-                <p>Keyboard shortcuts: Space/Enter to show answer | 1 = Hard | 2 = Medium | 3 = Easy</p>
-            </div>
         </section>
 
         <!-- Stats Section -->
         <section class="stats-section">
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-number">8</div>
-                    <div class="stat-label">Organic Cards</div>
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Reactions Cards</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number" id="totalDueDisplay">-</div>
@@ -117,7 +112,6 @@
         </footer>
     </div>
 
-    <!-- Link to the external JavaScript file with spaced repetition -->
-    <script src="Organic.js"></script>
+    <script src="organic-reactions.js"></script>
 </body>
 </html>
