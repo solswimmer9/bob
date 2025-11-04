@@ -20,17 +20,21 @@ async function signInWithGoogle() {
   } catch (error) {
     console.error('Error signing in:', error);
 
-    // User-friendly error messages
-    let errorMessage = 'Failed to sign in. Please try again.';
+    // Handle different error types
     if (error.code === 'auth/popup-blocked') {
-      errorMessage = 'Pop-up was blocked. Please allow pop-ups for this site.';
+      alert('Pop-up was blocked. Please allow pop-ups for this site and try again.');
     } else if (error.code === 'auth/popup-closed-by-user') {
-      errorMessage = 'Sign-in cancelled.';
+      // User cancelled - don't show error, just log it
+      console.log('User cancelled sign-in');
     } else if (error.code === 'auth/network-request-failed') {
-      errorMessage = 'Network error. Please check your connection.';
+      alert('Network error. Please check your connection and try again.');
+    } else if (error.code === 'auth/unauthorized-domain') {
+      alert('This domain is not authorized for authentication. Please contact support.');
+    } else {
+      // Show alert for other unexpected errors
+      alert('Failed to sign in: ' + error.message);
     }
 
-    alert(errorMessage);
     throw error;
   }
 }
