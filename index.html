@@ -263,13 +263,25 @@
 
         // Sign in button click handler
         googleSignInBtn.addEventListener('click', async () => {
+            console.log('Sign in button clicked');
+
+            // Check if auth is available
+            if (typeof window.auth === 'undefined' || typeof window.auth.signInWithGoogle !== 'function') {
+                console.error('Auth module not loaded!');
+                alert('Authentication system is not ready. Please refresh the page.');
+                return;
+            }
+
             googleSignInBtn.disabled = true;
             googleSignInBtn.innerHTML = '<span class="loading-spinner"></span> Signing in...';
 
             try {
-                await auth.signInWithGoogle();
+                console.log('Calling auth.signInWithGoogle()...');
+                await window.auth.signInWithGoogle();
+                console.log('Sign in successful!');
                 // User will be redirected or UI will update via onUserSignedIn
             } catch (error) {
+                console.error('Sign in error:', error);
                 // Reset button state
                 googleSignInBtn.disabled = false;
                 googleSignInBtn.innerHTML = `
