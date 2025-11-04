@@ -24,7 +24,7 @@
     <div class="user-profile"></div>
 
     <div class="container">
-        <!-- Hero Section -->
+        <!-- Hero Section with Feature Carousel -->
         <header class="hero">
             <div class="hero-content">
                 <div class="logo">
@@ -34,27 +34,31 @@
                     </svg>
                 </div>
                 <h1 class="hero-title">
-                    <span class="fade-in-up">Chemistry</span>
-                    <span class="fade-in-up delay-1">Flashcards</span>
+                    <span class="fade-in-up">A smarter way to</span>
+                    <span class="fade-in-up delay-1">master chemistry</span>
                 </h1>
-                <p class="hero-subtitle fade-in-up delay-2">Master A-Level Chemistry with interactive flashcards</p>
+                <p class="hero-subtitle fade-in-up delay-2">Learn A-Level Chemistry with intelligent spaced repetition and interactive flashcards</p>
 
-                <!-- Sign In Button (shown when not signed in) -->
-                <div id="signInContainer" class="fade-in-up delay-3">
-                    <button class="google-sign-in-btn" id="googleSignInBtn">
-                        <svg class="google-icon" viewBox="0 0 24 24">
-                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                        </svg>
-                        Sign in with Google
-                    </button>
-                </div>
+                <!-- CTA Buttons -->
+                <div class="hero-cta-container fade-in-up delay-3">
+                    <!-- Sign In Button (shown when not signed in) -->
+                    <div id="signInContainer">
+                        <button class="google-sign-in-btn" id="googleSignInBtn">
+                            <svg class="google-icon" viewBox="0 0 24 24">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                            Get Started Free
+                        </button>
+                        <button class="cta-button secondary" onclick="scrollToCarousel()">Try Demo</button>
+                    </div>
 
-                <!-- Browse Topics Button (shown when signed in) -->
-                <div id="browseTopicsContainer" style="display: none;" class="fade-in-up delay-3">
-                    <button class="cta-button" onclick="scrollToFeatures()">Browse Topics</button>
+                    <!-- Browse Topics Button (shown when signed in) -->
+                    <div id="browseTopicsContainer" style="display: none;">
+                        <button class="cta-button" onclick="scrollToFeatures()">Browse Topics</button>
+                    </div>
                 </div>
             </div>
 
@@ -67,6 +71,183 @@
                 <div class="float-element element-5">NH₃</div>
             </div>
         </header>
+
+        <!-- Feature Carousel Section -->
+        <section class="feature-showcase" id="featureCarousel">
+            <div class="carousel-container">
+                <!-- Carousel Navigation -->
+                <button class="carousel-nav prev" id="carouselPrev" aria-label="Previous slide">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                </button>
+                <button class="carousel-nav next" id="carouselNext" aria-label="Next slide">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </button>
+
+                <!-- Carousel Track -->
+                <div class="carousel-track">
+                    <!-- Slide 1: Spaced Repetition -->
+                    <div class="carousel-slide active">
+                        <div class="slide-content">
+                            <div class="slide-visual">
+                                <div class="mockup-card spaced-rep">
+                                    <div class="mockup-header">
+                                        <div class="mockup-dots">
+                                            <span></span><span></span><span></span>
+                                        </div>
+                                    </div>
+                                    <div class="mockup-body">
+                                        <div class="difficulty-display">
+                                            <div class="diff-option hard">
+                                                <span class="diff-label">Hard</span>
+                                                <span class="diff-interval">1 day</span>
+                                            </div>
+                                            <div class="diff-option medium">
+                                                <span class="diff-label">Medium</span>
+                                                <span class="diff-interval">2 days</span>
+                                            </div>
+                                            <div class="diff-option easy active">
+                                                <span class="diff-label">Easy</span>
+                                                <span class="diff-interval">4 days</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slide-text">
+                                <h3>Intelligent Spaced Repetition</h3>
+                                <p>Our smart algorithm adapts to your learning pace. Cards you find difficult appear more frequently, while mastered concepts review less often.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 2: Cloud Sync -->
+                    <div class="carousel-slide">
+                        <div class="slide-content">
+                            <div class="slide-visual">
+                                <div class="mockup-card cloud-sync">
+                                    <div class="mockup-header">
+                                        <div class="mockup-dots">
+                                            <span></span><span></span><span></span>
+                                        </div>
+                                    </div>
+                                    <div class="mockup-body">
+                                        <div class="sync-status">
+                                            <div class="sync-icon">
+                                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M20 16v-2a4 4 0 0 0-4-4H4"/>
+                                                    <polyline points="1 11 4 14 7 11"/>
+                                                    <path d="M4 8v2a4 4 0 0 0 4 4h12"/>
+                                                    <polyline points="23 13 20 10 17 13"/>
+                                                </svg>
+                                            </div>
+                                            <p class="sync-text">Syncing progress...</p>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slide-text">
+                                <h3>Seamless Cloud Sync</h3>
+                                <p>Your progress syncs automatically across all devices. Study on your phone during commute, continue on your laptop at home.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 3: Progress Tracking -->
+                    <div class="carousel-slide">
+                        <div class="slide-content">
+                            <div class="slide-visual">
+                                <div class="mockup-card progress-track">
+                                    <div class="mockup-header">
+                                        <div class="mockup-dots">
+                                            <span></span><span></span><span></span>
+                                        </div>
+                                    </div>
+                                    <div class="mockup-body">
+                                        <div class="stats-grid-mockup">
+                                            <div class="stat-item">
+                                                <div class="stat-value">47</div>
+                                                <div class="stat-label">Cards Today</div>
+                                            </div>
+                                            <div class="stat-item">
+                                                <div class="stat-value">7d</div>
+                                                <div class="stat-label">Streak</div>
+                                            </div>
+                                            <div class="stat-item">
+                                                <div class="stat-value">85%</div>
+                                                <div class="stat-label">Accuracy</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slide-text">
+                                <h3>Detailed Progress Tracking</h3>
+                                <p>Monitor your learning journey with comprehensive statistics. Track daily progress, study streaks, and mastery levels across all topics.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 4: Complete Coverage -->
+                    <div class="carousel-slide">
+                        <div class="slide-content">
+                            <div class="slide-visual">
+                                <div class="mockup-card topic-list">
+                                    <div class="mockup-header">
+                                        <div class="mockup-dots">
+                                            <span></span><span></span><span></span>
+                                        </div>
+                                    </div>
+                                    <div class="mockup-body">
+                                        <div class="topics-mockup">
+                                            <div class="topic-item organic">
+                                                <div class="topic-icon">🧪</div>
+                                                <div class="topic-info">
+                                                    <div class="topic-name">Organic Chemistry</div>
+                                                    <div class="topic-count">85 cards</div>
+                                                </div>
+                                            </div>
+                                            <div class="topic-item physical">
+                                                <div class="topic-icon">⚛️</div>
+                                                <div class="topic-info">
+                                                    <div class="topic-name">Physical Chemistry</div>
+                                                    <div class="topic-count">92 cards</div>
+                                                </div>
+                                            </div>
+                                            <div class="topic-item inorganic">
+                                                <div class="topic-icon">⚗️</div>
+                                                <div class="topic-info">
+                                                    <div class="topic-name">Inorganic Chemistry</div>
+                                                    <div class="topic-count">73 cards</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slide-text">
+                                <h3>Complete A-Level Coverage</h3>
+                                <p>250+ expertly crafted flashcards covering all A-Level Chemistry topics. From organic reactions to thermodynamics, we've got you covered.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carousel Indicators -->
+                <div class="carousel-indicators">
+                    <button class="indicator active" data-slide="0" aria-label="Go to slide 1"></button>
+                    <button class="indicator" data-slide="1" aria-label="Go to slide 2"></button>
+                    <button class="indicator" data-slide="2" aria-label="Go to slide 3"></button>
+                    <button class="indicator" data-slide="3" aria-label="Go to slide 4"></button>
+                </div>
+            </div>
+        </section>
 
         <!-- Features Section -->
         <section class="features">
@@ -304,11 +485,145 @@
             });
         }
 
+        // Scroll to carousel function
+        function scrollToCarousel() {
+            document.getElementById('featureCarousel').scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
+
         // Update the existing CTA button to use scrollToFeatures
         const oldCtaButton = document.querySelector('.cta-button');
         if (oldCtaButton && oldCtaButton.textContent === 'Get Started') {
             oldCtaButton.addEventListener('click', scrollToFeatures);
         }
+    </script>
+
+    <!-- Feature Carousel Script -->
+    <script>
+        // Carousel functionality
+        class FeatureCarousel {
+            constructor() {
+                this.currentSlide = 0;
+                this.slides = document.querySelectorAll('.carousel-slide');
+                this.indicators = document.querySelectorAll('.indicator');
+                this.prevBtn = document.getElementById('carouselPrev');
+                this.nextBtn = document.getElementById('carouselNext');
+                this.autoplayInterval = null;
+                this.autoplayDelay = 5000; // 5 seconds
+
+                this.init();
+            }
+
+            init() {
+                // Navigation button listeners
+                this.prevBtn.addEventListener('click', () => this.prev());
+                this.nextBtn.addEventListener('click', () => this.next());
+
+                // Indicator button listeners
+                this.indicators.forEach((indicator, index) => {
+                    indicator.addEventListener('click', () => this.goToSlide(index));
+                });
+
+                // Keyboard navigation
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowLeft') this.prev();
+                    if (e.key === 'ArrowRight') this.next();
+                });
+
+                // Touch/swipe support
+                this.setupSwipeGestures();
+
+                // Start autoplay
+                this.startAutoplay();
+
+                // Pause autoplay on hover
+                const carouselContainer = document.querySelector('.carousel-container');
+                carouselContainer.addEventListener('mouseenter', () => this.stopAutoplay());
+                carouselContainer.addEventListener('mouseleave', () => this.startAutoplay());
+            }
+
+            goToSlide(index) {
+                // Remove active classes
+                this.slides[this.currentSlide].classList.remove('active');
+                this.indicators[this.currentSlide].classList.remove('active');
+
+                // Add prev class to current slide if going forward
+                if (index > this.currentSlide) {
+                    this.slides[this.currentSlide].classList.add('prev');
+                    setTimeout(() => {
+                        this.slides.forEach(slide => slide.classList.remove('prev'));
+                    }, 600);
+                }
+
+                // Update current slide
+                this.currentSlide = index;
+
+                // Add active classes
+                this.slides[this.currentSlide].classList.add('active');
+                this.indicators[this.currentSlide].classList.add('active');
+
+                // Reset autoplay
+                this.stopAutoplay();
+                this.startAutoplay();
+            }
+
+            next() {
+                const nextIndex = (this.currentSlide + 1) % this.slides.length;
+                this.goToSlide(nextIndex);
+            }
+
+            prev() {
+                const prevIndex = (this.currentSlide - 1 + this.slides.length) % this.slides.length;
+                this.goToSlide(prevIndex);
+            }
+
+            startAutoplay() {
+                this.autoplayInterval = setInterval(() => {
+                    this.next();
+                }, this.autoplayDelay);
+            }
+
+            stopAutoplay() {
+                if (this.autoplayInterval) {
+                    clearInterval(this.autoplayInterval);
+                    this.autoplayInterval = null;
+                }
+            }
+
+            setupSwipeGestures() {
+                const track = document.querySelector('.carousel-track');
+                let startX = 0;
+                let endX = 0;
+
+                track.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                });
+
+                track.addEventListener('touchmove', (e) => {
+                    endX = e.touches[0].clientX;
+                });
+
+                track.addEventListener('touchend', () => {
+                    const diffX = startX - endX;
+                    const threshold = 50; // minimum swipe distance
+
+                    if (Math.abs(diffX) > threshold) {
+                        if (diffX > 0) {
+                            this.next(); // Swipe left, go to next
+                        } else {
+                            this.prev(); // Swipe right, go to previous
+                        }
+                    }
+                });
+            }
+        }
+
+        // Initialize carousel
+        document.addEventListener('DOMContentLoaded', () => {
+            const carousel = new FeatureCarousel();
+        });
     </script>
 </body>
 </html>
