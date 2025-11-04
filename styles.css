@@ -103,6 +103,7 @@ body {
     border: 2px solid var(--color-accent);
     color: var(--color-accent);
     box-shadow: none;
+    padding: 14px 48px;
 }
 
 .cta-button.secondary:hover {
@@ -1000,6 +1001,7 @@ html {
     gap: 16px;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
 }
 
 /* Feature Carousel Styles */
