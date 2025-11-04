@@ -13,7 +13,7 @@ googleProvider.setCustomParameters({
 // Sign in with Google
 async function signInWithGoogle() {
   try {
-    const result = await auth.signInWithPopup(googleProvider);
+    const result = await firebase.auth().signInWithPopup(googleProvider);
     currentUser = result.user;
     console.log('User signed in:', currentUser.displayName);
     return currentUser;
@@ -38,7 +38,7 @@ async function signInWithGoogle() {
 // Sign out
 async function signOut() {
   try {
-    await auth.signOut();
+    await firebase.auth().signOut();
     currentUser = null;
     console.log('User signed out');
     // Redirect to home page
@@ -50,7 +50,7 @@ async function signOut() {
 }
 
 // Monitor authentication state changes
-auth.onAuthStateChanged((user) => {
+firebase.auth().onAuthStateChanged((user) => {
   currentUser = user;
 
   if (user) {
@@ -76,7 +76,7 @@ function onUserSignedOut() {
 
 // Get current user
 function getCurrentUser() {
-  return currentUser || auth.currentUser;
+  return currentUser || firebase.auth().currentUser;
 }
 
 // Check if user is signed in
@@ -88,13 +88,13 @@ function isUserSignedIn() {
 function requireAuth() {
   return new Promise((resolve, reject) => {
     // Check immediately if user is already loaded
-    if (auth.currentUser) {
-      resolve(auth.currentUser);
+    if (firebase.auth().currentUser) {
+      resolve(firebase.auth().currentUser);
       return;
     }
 
     // Wait for auth state to initialize
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       unsubscribe();
       if (user) {
         resolve(user);
