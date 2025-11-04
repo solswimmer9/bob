@@ -62,7 +62,7 @@
                     <p>Understand thermodynamics, kinetics, and equilibria</p>
                 </a>
 
-                <div class="feature-card">
+                <a href="Inorganic.html" class="feature-card">
                     <div class="feature-icon">
                         <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
                             <path d="M10 30L20 10L30 30" stroke="currentColor" stroke-width="2" fill="none"/>
@@ -71,7 +71,7 @@
                     </div>
                     <h3>Inorganic Chemistry</h3>
                     <p>Learn periodic trends and compound properties</p>
-                </div>
+                </a>
 
                 <a href="past papers/chemistry-tracker.html" class="feature-card">
                     <div class="feature-icon">
@@ -107,17 +107,19 @@
                     </div>
                 </div>
             </div>
-            <div class="card-controls">
-                <button class="control-btn prev-btn" id="prevBtn">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2"/>
-                    </svg>
+            <!-- Difficulty Rating Buttons -->
+            <div class="difficulty-buttons" id="difficultyButtons">
+                <button class="difficulty-btn hard-btn" data-difficulty="hard">
+                    <span class="btn-label">Hard</span>
+                    <span class="btn-interval">1 day</span>
                 </button>
-                <span class="card-counter" id="cardCounter">1 / 5</span>
-                <button class="control-btn next-btn" id="nextBtn">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2"/>
-                    </svg>
+                <button class="difficulty-btn medium-btn" data-difficulty="medium">
+                    <span class="btn-label">Medium</span>
+                    <span class="btn-interval">2 days</span>
+                </button>
+                <button class="difficulty-btn easy-btn" data-difficulty="easy">
+                    <span class="btn-label">Easy</span>
+                    <span class="btn-interval">4 days</span>
                 </button>
             </div>
         </section>

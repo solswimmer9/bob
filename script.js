@@ -1,8 +1,6 @@
 // Flashcard UI elements
 const flashcard = document.getElementById('flashcard');
-const prevBtn = document.getElementById('prevBtn');
-const nextBtn = document.getElementById('nextBtn');
-const cardCounter = document.getElementById('cardCounter');
+const difficultyButtons = document.querySelectorAll('.difficulty-btn');
 
 // Session state
 let currentCard = 0;
@@ -61,9 +59,6 @@ function updateCard(direction) {
             currentCard = (currentCard - 1 + totalCards) % totalCards;
         }
 
-        // Update counter
-        cardCounter.textContent = `${currentCard + 1} / ${totalCards}`;
-
         // Update content
         const card = flashcards[currentCard];
         document.querySelector('.flashcard-front h3').textContent = card.question;
@@ -89,21 +84,38 @@ flashcard.addEventListener('click', () => {
     }
 });
 
-// Navigation buttons
-prevBtn.addEventListener('click', () => updateCard('prev'));
-nextBtn.addEventListener('click', () => updateCard('next'));
+// Difficulty button handlers
+difficultyButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        const difficulty = e.currentTarget.getAttribute('data-difficulty');
+
+        // Here you can add logic to save the difficulty rating
+        console.log(`Card rated as: ${difficulty}`);
+
+        // Automatically advance to next card with animation
+        updateCard('next');
+    });
+});
 
 // Keyboard navigation
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft') {
-        updateCard('prev');
-    } else if (e.key === 'ArrowRight') {
-        updateCard('next');
-    } else if (e.key === ' ') {
+    if (e.key === ' ') {
         e.preventDefault();
         if (!isAnimating) {
             flashcard.classList.toggle('flipped');
         }
+    } else if (e.key === '1') {
+        // Hard
+        console.log('Card rated as: hard');
+        updateCard('next');
+    } else if (e.key === '2') {
+        // Medium
+        console.log('Card rated as: medium');
+        updateCard('next');
+    } else if (e.key === '3') {
+        // Easy
+        console.log('Card rated as: easy');
+        updateCard('next');
     }
 });
 
@@ -257,6 +269,3 @@ document.addEventListener('mousemove', (e) => {
         element.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
     });
 });
-
-// Initialize card counter
-cardCounter.textContent = `${currentCard + 1} / ${totalCards}`;

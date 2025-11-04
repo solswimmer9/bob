@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metal Extraction - Inorganic Chemistry Flashcards</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <header class="hero">
+            <div class="hero-content">
+                <div class="logo">
+                    <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                        <path d="M10 30L20 10L30 30H10Z" stroke="currentColor" stroke-width="3" fill="none"/>
+                        <circle cx="20" cy="25" r="3" fill="currentColor"/>
+                        <path d="M30 30L40 10L50 30H30Z" stroke="currentColor" stroke-width="3" fill="none"/>
+                        <circle cx="40" cy="25" r="3" fill="currentColor"/>
+                    </svg>
+                </div>
+                <h1 class="hero-title">
+                    <span class="fade-in-up">Metal</span>
+                    <span class="fade-in-up delay-1">Extraction</span>
+                </h1>
+                <p class="hero-subtitle fade-in-up delay-2">Master extraction methods and redox processes</p>
+                <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                    <a href="Inorganic.html" class="cta-button fade-in-up delay-3">Back to Topics</a>
+                    <a href="index.html" class="cta-button fade-in-up delay-3">Home</a>
+                </div>
+            </div>
+
+            <!-- Floating Elements -->
+            <div class="floating-elements">
+                <div class="float-element element-1">Fe</div>
+                <div class="float-element element-2">Al</div>
+                <div class="float-element element-3">CO</div>
+                <div class="float-element element-4">TiCl₄</div>
+                <div class="float-element element-5">C</div>
+            </div>
+        </header>
+
+        <!-- Flashcard Section -->
+        <section class="demo-section">
+            <h2 class="section-title">Metal Extraction Flashcards</h2>
+            <p class="card-counter" id="cardCounter" style="text-align: center; margin-bottom: 20px; opacity: 0.7;">Card 1 of 12</p>
+
+            <div class="flashcard-container">
+                <div class="flashcard" id="flashcard">
+                    <div class="flashcard-inner">
+                        <div class="flashcard-front">
+                            <span class="card-label">Question</span>
+                            <h3 id="question">Loading...</h3>
+                        </div>
+                        <div class="flashcard-back">
+                            <span class="card-label">Answer</span>
+                            <h3 id="answer">Loading...</h3>
+                            <p class="card-explanation" id="explanation"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Difficulty Rating Buttons -->
+            <div class="difficulty-buttons" id="difficultyButtons">
+                <button class="difficulty-btn hard-btn" data-difficulty="hard">
+                    <span class="btn-label">Hard</span>
+                    <span class="btn-interval">1 day</span>
+                </button>
+                <button class="difficulty-btn medium-btn" data-difficulty="medium">
+                    <span class="btn-label">Medium</span>
+                    <span class="btn-interval">2 days</span>
+                </button>
+                <button class="difficulty-btn easy-btn" data-difficulty="easy">
+                    <span class="btn-label">Easy</span>
+                    <span class="btn-interval">4 days</span>
+                </button>
+            </div>
+
+            <!-- Keyboard Shortcuts Hint -->
+            <div style="margin-top: 20px; text-align: center; opacity: 0.6; font-size: 0.9em;">
+                <p>Keyboard shortcuts: Click card to flip | 1 = Hard | 2 = Medium | 3 = Easy</p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Built for A-Level Chemistry Students</p>
+            <p class="footer-tagline">I create; therefore I am woof</p>
+        </footer>
+    </div>
+
+    <script src="inorganic-extraction.js"></script>
+</body>
+</html>
