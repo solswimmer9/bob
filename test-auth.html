@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Auth Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .status {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .success { color: green; }
+        .error { color: red; }
+        button {
+            background: #4285F4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #357ae8;
+        }
+        #output {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <h1>🔍 Firebase Authentication Test</h1>
+
+    <div class="status">
+        <h2>Status Checks:</h2>
+        <div id="checks"></div>
+    </div>
+
+    <button id="testSignIn">Test Google Sign-In</button>
+
+    <div class="status">
+        <h2>Console Output:</h2>
+        <div id="output"></div>
+    </div>
+
+    <script src="firebase-config.js"></script>
+
+    <script>
+        const checksDiv = document.getElementById('checks');
+        const outputDiv = document.getElementById('output');
+
+        function log(message, isError = false) {
+            const timestamp = new Date().toLocaleTimeString();
+            const color = isError ? '#ff6b6b' : '#4ecdc4';
+            outputDiv.innerHTML += `<span style="color: ${color}">[${timestamp}]</span> ${message}\n`;
+            console.log(message);
+        }
+
+        function addCheck(label, status, details = '') {
+            const statusClass = status ? 'success' : 'error';
+            const statusText = status ? '✅' : '❌';
+            checksDiv.innerHTML += `
+                <div style="margin: 10px 0;">
+                    <strong>${statusText} ${label}:</strong>
+                    <span class="${statusClass}">${status ? 'OK' : 'FAILED'}</span>
+                    ${details ? `<br><small style="color: #666;">${details}</small>` : ''}
+                </div>
+            `;
+        }
+
+        // Run diagnostics
+        log('🚀 Starting Firebase diagnostics...');
+
+        // Check 1: Firebase loaded
+        if (typeof firebase !== 'undefined') {
+            addCheck('Firebase SDK', true, 'Version: ' + firebase.SDK_VERSION);
+            log('✓ Firebase SDK loaded successfully');
+        } else {
+            addCheck('Firebase SDK', false, 'Firebase SDK not loaded!');
+            log('✗ Firebase SDK not loaded!', true);
+        }
+
+        // Check 2: Firebase initialized
+        try {
+            const app = firebase.app();
+            addCheck('Firebase Initialized', true, 'Project: ' + app.options.projectId);
+            log('✓ Firebase app initialized: ' + app.options.projectId);
+        } catch (e) {
+            addCheck('Firebase Initialized', false, e.message);
+            log('✗ Firebase initialization failed: ' + e.message, true);
+        }
+
+        // Check 3: Auth service
+        try {
+            const auth = firebase.auth();
+            addCheck('Firebase Auth', true, 'Auth service ready');
+            log('✓ Firebase Auth service available');
+        } catch (e) {
+            addCheck('Firebase Auth', false, e.message);
+            log('✗ Firebase Auth failed: ' + e.message, true);
+        }
+
+        // Check 4: Firestore service
+        try {
+            const db = firebase.firestore();
+            addCheck('Firebase Firestore', true, 'Firestore service ready');
+            log('✓ Firebase Firestore service available');
+        } catch (e) {
+            addCheck('Firestore', false, e.message);
+            log('✗ Firestore failed: ' + e.message, true);
+        }
+
+        // Test sign-in button
+        document.getElementById('testSignIn').addEventListener('click', async () => {
+            log('🔐 Attempting Google Sign-In...');
+
+            try {
+                const auth = firebase.auth();
+                const provider = new firebase.auth.GoogleAuthProvider();
+                provider.setCustomParameters({
+                    prompt: 'select_account'
+                });
+
+                log('Opening sign-in popup...');
+                const result = await auth.signInWithPopup(provider);
+
+                log('✅ Sign-in successful!');
+                log('User: ' + result.user.displayName);
+                log('Email: ' + result.user.email);
+                log('UID: ' + result.user.uid);
+
+                addCheck('Google Sign-In Test', true, `Signed in as ${result.user.email}`);
+
+            } catch (error) {
+                log('❌ Sign-in failed!', true);
+                log('Error code: ' + error.code, true);
+                log('Error message: ' + error.message, true);
+
+                addCheck('Google Sign-In Test', false, error.code + ': ' + error.message);
+
+                // Specific error guidance
+                if (error.code === 'auth/popup-blocked') {
+                    alert('❌ Pop-up was blocked!\n\nPlease:\n1. Allow pop-ups for localhost\n2. Try again');
+                } else if (error.code === 'auth/unauthorized-domain') {
+                    alert('❌ Unauthorized domain!\n\nPlease add "localhost" to authorized domains in Firebase Console:\nAuthentication → Settings → Authorized domains');
+                } else if (error.code === 'auth/operation-not-allowed') {
+                    alert('❌ Google sign-in not enabled!\n\nPlease enable Google authentication in Firebase Console:\nAuthentication → Sign-in method → Google → Enable');
+                } else {
+                    alert('Sign-in error: ' + error.message);
+                }
+            }
+        });
+
+        log('✨ Diagnostics complete. Click "Test Google Sign-In" to try authentication.');
+    </script>
+</body>
+</html>

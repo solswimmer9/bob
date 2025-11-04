@@ -44,5 +44,5 @@ const organicFlashcards = [
   }
 ];
 
-// Initialize flashcards using shared spaced repetition system
-initializeFlashcards('organicChemistryProgress', organicFlashcards);
+// Initialize flashcards using Firebase spaced repetition system
+initializeFirebaseFlashcards('organic', organicFlashcards);
