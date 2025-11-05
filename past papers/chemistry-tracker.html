@@ -572,6 +572,15 @@
 
         // Initialize with authentication
         initAuth();
+
+        // Also render immediately as fallback (in case auth is slow/fails)
+        setTimeout(() => {
+            const grid = document.getElementById('papersGrid');
+            if (!grid || grid.innerHTML.trim() === '') {
+                console.log('Papers not loaded yet, rendering fallback...');
+                sortAndRenderPapers(papersData);
+            }
+        }, 1000);
     </script>
 </body>
 </html>
