@@ -49,7 +49,7 @@ class FirebaseSpacedRepetitionManager {
       let progressMap = {};
 
       // Only try to load from Firebase if user is signed in
-      if (auth && auth.isUserSignedIn && auth.isUserSignedIn() && firestore) {
+      if (window.auth && window.auth.isUserSignedIn && window.auth.isUserSignedIn() && firestore) {
         progressMap = await firestore.loadAllFlashcardProgress(this.topic);
       } else {
         console.log('Not signed in - using default progress');
@@ -92,7 +92,7 @@ class FirebaseSpacedRepetitionManager {
   async saveProgress(cardIndex, progressData) {
     try {
       // Only save to Firebase if user is signed in
-      if (auth && auth.isUserSignedIn && auth.isUserSignedIn() && firestore) {
+      if (window.auth && window.auth.isUserSignedIn && window.auth.isUserSignedIn() && firestore) {
         await firestore.saveFlashcardProgress(this.topic, cardIndex, progressData);
       }
       this.progress[cardIndex] = progressData;
@@ -684,7 +684,7 @@ class FirebaseStudyTracker {
       : 0;
 
     // Save to Firestore (only if user is signed in)
-    if (auth && auth.isUserSignedIn && auth.isUserSignedIn() && firestore) {
+    if (window.auth && window.auth.isUserSignedIn && window.auth.isUserSignedIn() && firestore) {
       await firestore.saveStudySession(topic, {
         cardsReviewed: 1,
         timeSpent: timeSpent
@@ -717,7 +717,7 @@ class FirebaseStudyTracker {
 // Initialize function for Firebase-powered flashcards
 async function initializeFirebaseFlashcards(topic, flashcardsArray) {
   // Check if user is signed in (but don't require it)
-  const isSignedIn = auth && auth.isUserSignedIn && auth.isUserSignedIn();
+  const isSignedIn = window.auth && window.auth.isUserSignedIn && window.auth.isUserSignedIn();
 
   if (!isSignedIn) {
     console.log('User not signed in - flashcards will work but progress will not be saved');
