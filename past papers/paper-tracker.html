@@ -257,8 +257,13 @@
         // Initialize - require authentication first
         async function init() {
             try {
-                // Require authentication
-                currentUser = await window.auth.requireAuth();
+                // Check if user is signed in (optional)
+                if (window.auth && window.auth.isUserSignedIn && window.auth.isUserSignedIn()) {
+                    currentUser = window.auth.getCurrentUser();
+                } else {
+                    console.log('User not signed in - progress will not be saved');
+                    currentUser = null;
+                }
 
                 if (!paperId) {
                     alert('No paper selected!');
@@ -280,7 +285,6 @@
                 setupEventListeners();
             } catch (error) {
                 console.error('Initialization error:', error);
-                // User will be redirected by requireAuth if not signed in
             }
         }
 
