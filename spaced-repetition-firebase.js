@@ -49,8 +49,8 @@ class FirebaseSpacedRepetitionManager {
       let progressMap = {};
 
       // Only try to load from Firebase if user is signed in
-      if (window.auth && window.auth.isUserSignedIn && window.auth.isUserSignedIn() && firestore) {
-        progressMap = await firestore.loadAllFlashcardProgress(this.topic);
+      if (window.auth && window.auth.isUserSignedIn && window.auth.isUserSignedIn() && window.firestore) {
+        progressMap = await window.firestore.loadAllFlashcardProgress(this.topic);
       } else {
         console.log('Not signed in - using default progress');
       }
@@ -92,8 +92,8 @@ class FirebaseSpacedRepetitionManager {
   async saveProgress(cardIndex, progressData) {
     try {
       // Only save to Firebase if user is signed in
-      if (window.auth && window.auth.isUserSignedIn && window.auth.isUserSignedIn() && firestore) {
-        await firestore.saveFlashcardProgress(this.topic, cardIndex, progressData);
+      if (window.auth && window.auth.isUserSignedIn && window.auth.isUserSignedIn() && window.firestore) {
+        await window.firestore.saveFlashcardProgress(this.topic, cardIndex, progressData);
       }
       this.progress[cardIndex] = progressData;
       return true;
@@ -684,8 +684,8 @@ class FirebaseStudyTracker {
       : 0;
 
     // Save to Firestore (only if user is signed in)
-    if (window.auth && window.auth.isUserSignedIn && window.auth.isUserSignedIn() && firestore) {
-      await firestore.saveStudySession(topic, {
+    if (window.auth && window.auth.isUserSignedIn && window.auth.isUserSignedIn() && window.firestore) {
+      await window.firestore.saveStudySession(topic, {
         cardsReviewed: 1,
         timeSpent: timeSpent
       });
@@ -696,7 +696,7 @@ class FirebaseStudyTracker {
   }
 
   static async getTodayStats() {
-    return await firestore.loadTodayStudyStats();
+    return await window.firestore.loadTodayStudyStats();
   }
 
   static formatTime(seconds) {
@@ -736,7 +736,7 @@ async function initializeFirebaseFlashcards(topic, flashcardsArray) {
   window.addEventListener('beforeunload', async () => {
     if (isSignedIn && FirebaseStudyTracker.sessionStartTime && FirebaseStudyTracker.sessionCards > 0) {
       const timeSpent = Math.floor((Date.now() - FirebaseStudyTracker.sessionStartTime) / 1000);
-      await firestore.saveStudySession(topic, {
+      await window.firestore.saveStudySession(topic, {
         cardsReviewed: 0,
         timeSpent: timeSpent
       });
