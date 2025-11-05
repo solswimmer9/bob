@@ -32,5 +32,5 @@ const thermodynamicsFlashcards = [
   }
 ];
 
-// Initialize flashcards using shared spaced repetition system
-initializeFlashcards('physicalThermodynamicsProgress', thermodynamicsFlashcards);
+// Initialize flashcards using Firebase spaced repetition system
+initializeFirebaseFlashcards('thermodynamics', thermodynamicsFlashcards);

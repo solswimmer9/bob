@@ -5,8 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thermodynamics - Physical Chemistry</title>
     <link rel="stylesheet" href="styles.css">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
+    <!-- User Profile (appears when signed in) -->
+    <div class="user-profile"></div>
+
     <div class="container">
         <!-- Hero Section -->
         <header class="hero">
@@ -64,23 +72,29 @@
                 <button class="show-answer-btn" id="showAnswerBtn">Show Answer</button>
             </div>
 
-            <!-- Difficulty Rating Buttons -->
+            <!-- Difficulty Rating Buttons (hidden initially) - Anki-style 4 buttons -->
             <div class="difficulty-buttons" id="difficultyButtons" style="display: none;">
+                <button class="difficulty-btn again-btn" data-difficulty="again">
+                    <span class="btn-label">Again</span>
+                    <span class="btn-interval">1m</span>
+                </button>
                 <button class="difficulty-btn hard-btn" data-difficulty="hard">
                     <span class="btn-label">Hard</span>
-                    <span class="btn-interval">1 day</span>
-                    <span class="btn-shortcut">Press 1</span>
+                    <span class="btn-interval">10m</span>
                 </button>
-                <button class="difficulty-btn medium-btn" data-difficulty="medium">
-                    <span class="btn-label">Medium</span>
-                    <span class="btn-interval">2 days</span>
-                    <span class="btn-shortcut">Press 2</span>
+                <button class="difficulty-btn good-btn" data-difficulty="good">
+                    <span class="btn-label">Good</span>
+                    <span class="btn-interval">1d</span>
                 </button>
                 <button class="difficulty-btn easy-btn" data-difficulty="easy">
                     <span class="btn-label">Easy</span>
-                    <span class="btn-interval">4 days</span>
-                    <span class="btn-shortcut">Press 3</span>
+                    <span class="btn-interval">4d</span>
                 </button>
+            </div>
+
+            <!-- Keyboard Shortcuts Hint -->
+            <div class="keyboard-hint" style="margin-top: 20px; text-align: center; opacity: 0.6; font-size: 0.9em;">
+                <p>Keyboard shortcuts: Space/Enter to show answer | 1 = Again | 2 = Hard | 3 = Good | 4 = Easy</p>
             </div>
 
             <!-- Session Progress -->
@@ -114,6 +128,28 @@
         </footer>
     </div>
 
+    <!-- Firebase Configuration and Auth -->
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+    <script src="firestore.js"></script>
+
+    <!-- Firebase-powered Spaced Repetition System -->
+    <script src="spaced-repetition-firebase.js"></script>
+
+    <!-- Thermodynamics Flashcard Data -->
     <script src="physical-thermodynamics.js"></script>
+
+    <!-- Auth state handler for this page -->
+    <script>
+        // Override auth callback to show user profile
+        function onUserSignedIn(user) {
+            console.log('User signed in on Thermodynamics page:', user.email);
+            auth.updateUserProfile(user);
+        }
+
+        function onUserSignedOut() {
+            // User signed out - redirect handled by auth.js
+        }
+    </script>
 </body>
 </html>
