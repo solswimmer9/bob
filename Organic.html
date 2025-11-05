@@ -73,19 +73,23 @@
                 <button class="show-answer-btn" id="showAnswerBtn">Show Answer</button>
             </div>
 
-            <!-- Difficulty Rating Buttons (hidden initially) -->
+            <!-- Difficulty Rating Buttons (hidden initially) - Anki-style 4 buttons -->
             <div class="difficulty-buttons" id="difficultyButtons" style="display: none;">
+                <button class="difficulty-btn again-btn" data-difficulty="again">
+                    <span class="btn-label">Again</span>
+                    <span class="btn-interval">1m</span>
+                </button>
                 <button class="difficulty-btn hard-btn" data-difficulty="hard">
                     <span class="btn-label">Hard</span>
-                    <span class="btn-interval">1 day</span>
+                    <span class="btn-interval">10m</span>
                 </button>
-                <button class="difficulty-btn medium-btn" data-difficulty="medium">
-                    <span class="btn-label">Medium</span>
-                    <span class="btn-interval">2 days</span>
+                <button class="difficulty-btn good-btn" data-difficulty="good">
+                    <span class="btn-label">Good</span>
+                    <span class="btn-interval">1d</span>
                 </button>
                 <button class="difficulty-btn easy-btn" data-difficulty="easy">
                     <span class="btn-label">Easy</span>
-                    <span class="btn-interval">4 days</span>
+                    <span class="btn-interval">4d</span>
                 </button>
             </div>
 
@@ -96,7 +100,7 @@
 
             <!-- Keyboard Shortcuts Hint -->
             <div class="keyboard-hint" style="margin-top: 20px; text-align: center; opacity: 0.6; font-size: 0.9em;">
-                <p>Keyboard shortcuts: Space/Enter to show answer | 1 = Hard | 2 = Medium | 3 = Easy</p>
+                <p>Keyboard shortcuts: Space/Enter to show answer | 1 = Again | 2 = Hard | 3 = Good | 4 = Easy</p>
             </div>
         </section>
 

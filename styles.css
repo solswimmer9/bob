@@ -384,7 +384,7 @@ body {
 .difficulty-btn {
     background: var(--color-card-bg);
     border: 2px solid var(--color-border);
-    padding: 16px 32px;
+    padding: 16px 24px;
     border-radius: 12px;
     cursor: pointer;
     transition: var(--transition);
@@ -392,12 +392,20 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 4px;
-    min-width: 140px;
+    min-width: 110px;
+    flex: 1;
+    max-width: 140px;
 }
 
 .difficulty-btn:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-md);
+}
+
+.again-btn:hover {
+    background: #e74c3c;
+    border-color: #e74c3c;
+    color: white;
 }
 
 .hard-btn:hover {
@@ -406,15 +414,22 @@ body {
     color: white;
 }
 
-.medium-btn:hover {
-    background: #ffa502;
-    border-color: #ffa502;
+.good-btn:hover {
+    background: #3498db;
+    border-color: #3498db;
     color: white;
 }
 
 .easy-btn:hover {
     background: #2ed573;
     border-color: #2ed573;
+    color: white;
+}
+
+/* Remove old medium-btn styling (replaced by good-btn) */
+.medium-btn:hover {
+    background: #ffa502;
+    border-color: #ffa502;
     color: white;
 }
 

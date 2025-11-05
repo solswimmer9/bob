@@ -1,5 +1,5 @@
-// Firebase-Integrated Spaced Repetition System
-// This replaces localStorage with Firebase Firestore for cloud-based progress tracking
+// Firebase-Integrated Spaced Repetition System with SM-2 Algorithm
+// This implements Anki-style spaced repetition with dynamic intervals
 
 class FirebaseSpacedRepetitionManager {
   constructor(topic, flashcardsArray) {
@@ -7,6 +7,41 @@ class FirebaseSpacedRepetitionManager {
     this.flashcards = flashcardsArray;
     this.progress = {};
     this.isLoaded = false;
+
+    // SM-2 Configuration (similar to Anki defaults)
+    this.config = {
+      // Learning steps (in minutes)
+      learningSteps: [1, 10],
+
+      // Graduating interval (days) - when card moves from Learning to Review
+      graduatingInterval: 1,
+
+      // Easy interval (days) - when hitting Easy on a new card
+      easyInterval: 4,
+
+      // Starting ease factor (2.5 = 250%)
+      startingEase: 2.5,
+
+      // Ease factor changes
+      easyBonus: 1.3,        // Easy multiplies interval by this extra amount
+      hardInterval: 1.2,     // Hard multiplies interval by this
+
+      // Ease factor adjustments
+      againEaseChange: -0.2, // Ease penalty for Again
+      hardEaseChange: -0.15, // Ease penalty for Hard
+      easyEaseChange: 0.15,  // Ease bonus for Easy
+
+      // Limits
+      minEase: 1.3,          // Minimum ease factor (130%)
+      maxInterval: 36500,    // Maximum interval in days (100 years)
+
+      // Interval fuzz (randomness)
+      fuzzRange: 0.05,       // ±5% randomness to prevent card bunching
+
+      // Lapses (when you hit Again on a review card)
+      relearningSteps: [10], // Relearning steps in minutes
+      minimumLapseInterval: 1 // Minimum interval after lapse
+    };
   }
 
   async loadProgress() {
@@ -17,17 +52,23 @@ class FirebaseSpacedRepetitionManager {
       this.flashcards.forEach((card, index) => {
         if (progressMap[index]) {
           this.progress[index] = progressMap[index];
+          // Ensure state exists (for backwards compatibility)
+          if (!this.progress[index].state) {
+            this.progress[index].state = 'new';
+          }
         } else {
-          // Initialize new cards
+          // Initialize new cards with SM-2 structure
           this.progress[index] = {
             topic: this.topic,
             index: index,
+            state: 'new',              // Card states: 'new', 'learning', 'review', 'relearning'
             nextReview: new Date(),
             reviewCount: 0,
             lastReviewed: null,
-            interval: 1,
-            easeFactor: 2.5,
-            difficulty: 'medium'
+            interval: 0,               // Current interval in days (or minutes for learning)
+            easeFactor: this.config.startingEase,
+            lapses: 0,                 // Number of times card was forgotten
+            learningStep: 0            // Current position in learning/relearning steps
           };
         }
       });
@@ -66,30 +107,266 @@ class FirebaseSpacedRepetitionManager {
     });
   }
 
-  async recordReview(cardIndex, difficulty) {
+  // Add fuzz to interval to prevent cards from being reviewed on the same day
+  addFuzz(interval) {
+    if (interval < 2) return interval; // No fuzz for intervals less than 2 days
+
+    const fuzz = interval * this.config.fuzzRange;
+    const randomFuzz = (Math.random() * 2 - 1) * fuzz; // Random value between -fuzz and +fuzz
+
+    return Math.max(1, Math.round(interval + randomFuzz));
+  }
+
+  // Calculate next interval based on SM-2 algorithm
+  calculateNextInterval(cardProgress, rating) {
     const now = new Date();
-    const daysToAdd = {
-      'hard': 1,
-      'medium': 2,
-      'easy': 4
-    }[difficulty];
+    let newProgress = { ...cardProgress };
+    newProgress.lastReviewed = now;
+    newProgress.reviewCount++;
 
-    const nextReview = new Date(now);
-    nextReview.setDate(nextReview.getDate() + daysToAdd);
+    // Handle different card states
+    switch (cardProgress.state) {
+      case 'new':
+        return this.handleNewCard(newProgress, rating);
 
-    const currentProgress = this.progress[cardIndex] || {};
-    const newProgress = {
-      topic: this.topic,
-      index: cardIndex,
-      nextReview: nextReview,
-      reviewCount: (currentProgress.reviewCount || 0) + 1,
-      lastReviewed: now,
-      interval: daysToAdd,
-      easeFactor: currentProgress.easeFactor || 2.5,
-      difficulty: difficulty
+      case 'learning':
+        return this.handleLearningCard(newProgress, rating);
+
+      case 'review':
+        return this.handleReviewCard(newProgress, rating);
+
+      case 'relearning':
+        return this.handleRelearningCard(newProgress, rating);
+
+      default:
+        return this.handleNewCard(newProgress, rating);
+    }
+  }
+
+  handleNewCard(progress, rating) {
+    const now = new Date();
+
+    switch (rating) {
+      case 'again':
+        // Stay in learning, restart steps
+        progress.state = 'learning';
+        progress.learningStep = 0;
+        progress.nextReview = new Date(now.getTime() + this.config.learningSteps[0] * 60000);
+        break;
+
+      case 'hard':
+        // Start learning steps
+        progress.state = 'learning';
+        progress.learningStep = 0;
+        progress.nextReview = new Date(now.getTime() + this.config.learningSteps[0] * 60000);
+        break;
+
+      case 'good':
+        // Move through learning steps
+        progress.state = 'learning';
+        progress.learningStep = 0;
+        progress.nextReview = new Date(now.getTime() + this.config.learningSteps[0] * 60000);
+        break;
+
+      case 'easy':
+        // Skip learning, go straight to review with easy interval
+        progress.state = 'review';
+        progress.interval = this.config.easyInterval;
+        progress.nextReview = new Date(now.getTime() + this.config.easyInterval * 86400000);
+        progress.easeFactor += this.config.easyEaseChange;
+        break;
+    }
+
+    return progress;
+  }
+
+  handleLearningCard(progress, rating) {
+    const now = new Date();
+
+    switch (rating) {
+      case 'again':
+        // Restart learning steps
+        progress.learningStep = 0;
+        progress.nextReview = new Date(now.getTime() + this.config.learningSteps[0] * 60000);
+        break;
+
+      case 'hard':
+        // Repeat current step
+        const currentStep = this.config.learningSteps[progress.learningStep];
+        progress.nextReview = new Date(now.getTime() + currentStep * 60000);
+        break;
+
+      case 'good':
+        // Move to next step or graduate
+        progress.learningStep++;
+
+        if (progress.learningStep >= this.config.learningSteps.length) {
+          // Graduate to review
+          progress.state = 'review';
+          progress.interval = this.config.graduatingInterval;
+          progress.nextReview = new Date(now.getTime() + this.config.graduatingInterval * 86400000);
+        } else {
+          // Move to next learning step
+          const nextStep = this.config.learningSteps[progress.learningStep];
+          progress.nextReview = new Date(now.getTime() + nextStep * 60000);
+        }
+        break;
+
+      case 'easy':
+        // Graduate immediately with easy interval
+        progress.state = 'review';
+        progress.interval = this.config.easyInterval;
+        progress.nextReview = new Date(now.getTime() + this.config.easyInterval * 86400000);
+        progress.easeFactor += this.config.easyEaseChange;
+        break;
+    }
+
+    return progress;
+  }
+
+  handleReviewCard(progress, rating) {
+    const now = new Date();
+
+    switch (rating) {
+      case 'again':
+        // Lapse - go to relearning
+        progress.state = 'relearning';
+        progress.learningStep = 0;
+        progress.lapses++;
+        progress.easeFactor = Math.max(
+          this.config.minEase,
+          progress.easeFactor + this.config.againEaseChange
+        );
+        progress.nextReview = new Date(now.getTime() + this.config.relearningSteps[0] * 60000);
+        break;
+
+      case 'hard':
+        // Reduce ease, shorter interval
+        progress.easeFactor = Math.max(
+          this.config.minEase,
+          progress.easeFactor + this.config.hardEaseChange
+        );
+        progress.interval = Math.max(1, Math.round(progress.interval * this.config.hardInterval));
+        progress.interval = this.addFuzz(progress.interval);
+        progress.interval = Math.min(progress.interval, this.config.maxInterval);
+        progress.nextReview = new Date(now.getTime() + progress.interval * 86400000);
+        break;
+
+      case 'good':
+        // Normal SM-2 progression
+        progress.interval = Math.max(1, Math.round(progress.interval * progress.easeFactor));
+        progress.interval = this.addFuzz(progress.interval);
+        progress.interval = Math.min(progress.interval, this.config.maxInterval);
+        progress.nextReview = new Date(now.getTime() + progress.interval * 86400000);
+        break;
+
+      case 'easy':
+        // Increase ease, longer interval
+        progress.easeFactor += this.config.easyEaseChange;
+        progress.interval = Math.max(1, Math.round(progress.interval * progress.easeFactor * this.config.easyBonus));
+        progress.interval = this.addFuzz(progress.interval);
+        progress.interval = Math.min(progress.interval, this.config.maxInterval);
+        progress.nextReview = new Date(now.getTime() + progress.interval * 86400000);
+        break;
+    }
+
+    return progress;
+  }
+
+  handleRelearningCard(progress, rating) {
+    const now = new Date();
+
+    switch (rating) {
+      case 'again':
+        // Restart relearning
+        progress.learningStep = 0;
+        progress.nextReview = new Date(now.getTime() + this.config.relearningSteps[0] * 60000);
+        break;
+
+      case 'hard':
+        // Repeat current relearning step
+        const currentStep = this.config.relearningSteps[progress.learningStep] || this.config.relearningSteps[0];
+        progress.nextReview = new Date(now.getTime() + currentStep * 60000);
+        break;
+
+      case 'good':
+        // Move to next step or graduate back to review
+        progress.learningStep++;
+
+        if (progress.learningStep >= this.config.relearningSteps.length) {
+          // Graduate back to review with reduced interval
+          progress.state = 'review';
+          progress.interval = Math.max(
+            this.config.minimumLapseInterval,
+            Math.round(progress.interval * 0.5) // Interval is halved after lapse
+          );
+          progress.nextReview = new Date(now.getTime() + progress.interval * 86400000);
+        } else {
+          // Move to next relearning step
+          const nextStep = this.config.relearningSteps[progress.learningStep];
+          progress.nextReview = new Date(now.getTime() + nextStep * 60000);
+        }
+        break;
+
+      case 'easy':
+        // Graduate back to review with normal interval
+        progress.state = 'review';
+        progress.interval = Math.max(this.config.graduatingInterval, Math.round(progress.interval * 0.75));
+        progress.nextReview = new Date(now.getTime() + progress.interval * 86400000);
+        break;
+    }
+
+    return progress;
+  }
+
+  async recordReview(cardIndex, rating) {
+    const currentProgress = this.progress[cardIndex];
+    const newProgress = this.calculateNextInterval(currentProgress, rating);
+    await this.saveProgress(cardIndex, newProgress);
+  }
+
+  // Calculate preview intervals for each button
+  getButtonIntervals(cardProgress) {
+    const intervals = {
+      again: '',
+      hard: '',
+      good: '',
+      easy: ''
     };
 
-    await this.saveProgress(cardIndex, newProgress);
+    // Simulate each rating to get preview intervals
+    ['again', 'hard', 'good', 'easy'].forEach(rating => {
+      const preview = this.calculateNextInterval(cardProgress, rating);
+      intervals[rating] = this.formatInterval(preview);
+    });
+
+    return intervals;
+  }
+
+  formatInterval(progress) {
+    const now = new Date();
+    const nextReview = progress.nextReview instanceof Date
+      ? progress.nextReview
+      : new Date(progress.nextReview);
+
+    const diffMs = nextReview - now;
+    const diffMinutes = Math.round(diffMs / 60000);
+    const diffHours = Math.round(diffMs / 3600000);
+    const diffDays = Math.round(diffMs / 86400000);
+    const diffMonths = Math.round(diffDays / 30);
+    const diffYears = Math.round(diffDays / 365);
+
+    if (diffMinutes < 60) {
+      return `${diffMinutes}m`;
+    } else if (diffHours < 24) {
+      return `${diffHours}h`;
+    } else if (diffDays < 30) {
+      return `${diffDays}d`;
+    } else if (diffMonths < 12) {
+      return `${diffMonths}mo`;
+    } else {
+      return `${diffYears}y`;
+    }
   }
 
   getTotalDueCount() {
@@ -188,6 +465,9 @@ class FirebaseFlashcardSession {
     }
 
     const card = this.dueCards[this.currentCardIndex];
+    const cardIndex = this.dueCardIndices[this.currentCardIndex];
+    const cardProgress = this.srManager.progress[cardIndex];
+
     this.isAnswerShown = false;
 
     if (this.flashcard) {
@@ -219,11 +499,42 @@ class FirebaseFlashcardSession {
       }
     }
 
+    // Calculate and update button intervals
+    this.updateButtonIntervals(cardProgress);
+
     if (this.flashcard) {
       this.flashcard.style.animation = 'slideInFromStack 0.4s ease-out forwards';
       setTimeout(() => {
         this.flashcard.style.animation = '';
       }, 400);
+    }
+  }
+
+  updateButtonIntervals(cardProgress) {
+    // Get interval previews for each button
+    const intervals = this.srManager.getButtonIntervals(cardProgress);
+
+    // Update button interval labels
+    const againBtn = this.difficultyButtons?.querySelector('[data-difficulty="again"]');
+    const hardBtn = this.difficultyButtons?.querySelector('[data-difficulty="hard"]');
+    const goodBtn = this.difficultyButtons?.querySelector('[data-difficulty="good"]');
+    const easyBtn = this.difficultyButtons?.querySelector('[data-difficulty="easy"]');
+
+    if (againBtn) {
+      const intervalSpan = againBtn.querySelector('.btn-interval');
+      if (intervalSpan) intervalSpan.textContent = intervals.again;
+    }
+    if (hardBtn) {
+      const intervalSpan = hardBtn.querySelector('.btn-interval');
+      if (intervalSpan) intervalSpan.textContent = intervals.hard;
+    }
+    if (goodBtn) {
+      const intervalSpan = goodBtn.querySelector('.btn-interval');
+      if (intervalSpan) intervalSpan.textContent = intervals.good;
+    }
+    if (easyBtn) {
+      const intervalSpan = easyBtn.querySelector('.btn-interval');
+      if (intervalSpan) intervalSpan.textContent = intervals.easy;
     }
   }
 
@@ -306,7 +617,7 @@ class FirebaseFlashcardSession {
       });
     }
 
-    // Keyboard navigation
+    // Keyboard navigation (Anki-style: 1=Again, 2=Hard, 3=Good, 4=Easy)
     this.handleKeyPress = (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
         return;
@@ -318,13 +629,17 @@ class FirebaseFlashcardSession {
       }
       else if (e.key === '1' && this.isAnswerShown && !this.isAnimating) {
         e.preventDefault();
-        this.handleDifficultyClick('hard');
+        this.handleDifficultyClick('again');
       }
       else if (e.key === '2' && this.isAnswerShown && !this.isAnimating) {
         e.preventDefault();
-        this.handleDifficultyClick('medium');
+        this.handleDifficultyClick('hard');
       }
       else if (e.key === '3' && this.isAnswerShown && !this.isAnimating) {
+        e.preventDefault();
+        this.handleDifficultyClick('good');
+      }
+      else if (e.key === '4' && this.isAnswerShown && !this.isAnimating) {
         e.preventDefault();
         this.handleDifficultyClick('easy');
       }
