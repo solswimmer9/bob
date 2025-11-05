@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NMR Spectroscopy - Organic Chemistry</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <header class="hero">
+            <div class="hero-content">
+                <div class="logo">
+                    <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                        <rect x="7.5" y="15" width="45" height="37.5" rx="3" stroke="currentColor" stroke-width="3" fill="none"/>
+                        <path d="M22.5 15V7.5" stroke="currentColor" stroke-width="3"/>
+                        <path d="M37.5 15V7.5" stroke="currentColor" stroke-width="3"/>
+                    </svg>
+                </div>
+                <h1 class="hero-title">
+                    <span class="fade-in-up">NMR</span>
+                    <span class="fade-in-up delay-1">Spectroscopy</span>
+                </h1>
+                <p class="hero-subtitle fade-in-up delay-2">Master ¹³C and ¹H NMR, chemical shifts, and spin-spin coupling</p>
+                <a href="organic-topics.html" class="nav-btn primary">Back to Topics</a>
+            </div>
+
+            <!-- Floating Elements -->
+            <div class="floating-elements">
+                <div class="float-element element-1">¹³C</div>
+                <div class="float-element element-2">¹H</div>
+                <div class="float-element element-3">δ</div>
+                <div class="float-element element-4">ppm</div>
+                <div class="float-element element-5">TMS</div>
+            </div>
+        </header>
+
+        <!-- Flashcard Section with Spaced Repetition -->
+        <section class="demo-section">
+            <h2 class="section-title">NMR Spectroscopy Flashcards</h2>
+            <p class="due-cards-info" id="progress">Loading cards...</p>
+
+            <div class="flashcard-container">
+                <div class="flashcard" id="flashcard">
+                    <div class="flashcard-inner">
+                        <div class="flashcard-front">
+                            <span class="card-label">Question</span>
+                            <h3 id="question">Loading...</h3>
+                        </div>
+                        <div class="flashcard-back">
+                            <span class="card-label">Answer</span>
+                            <h3 id="answer">Loading...</h3>
+                            <p class="card-explanation" id="explanation"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Show Answer Button -->
+            <div class="card-controls">
+                <button class="show-answer-btn" id="showAnswerBtn">Show Answer</button>
+            </div>
+
+            <!-- Difficulty Rating Buttons -->
+            <div class="difficulty-buttons" id="difficultyButtons" style="display: none;">
+                <button class="difficulty-btn hard-btn" data-difficulty="hard">
+                    <span class="btn-label">Hard</span>
+                    <span class="btn-interval">1 day</span>
+                    <span class="btn-shortcut">Press 1</span>
+                </button>
+                <button class="difficulty-btn medium-btn" data-difficulty="medium">
+                    <span class="btn-label">Medium</span>
+                    <span class="btn-interval">2 days</span>
+                    <span class="btn-shortcut">Press 2</span>
+                </button>
+                <button class="difficulty-btn easy-btn" data-difficulty="easy">
+                    <span class="btn-label">Easy</span>
+                    <span class="btn-interval">4 days</span>
+                    <span class="btn-shortcut">Press 3</span>
+                </button>
+            </div>
+
+            <!-- Session Progress -->
+            <div class="session-progress" id="sessionProgress">
+                <span class="progress-text">Card <span id="currentCardNum">1</span> of <span id="totalDueCards">0</span></span>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">25</div>
+                    <div class="stat-label">NMR Cards</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalDueDisplay">-</div>
+                    <div class="stat-label">Due Today</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Free</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Built for A-Level Chemistry Students</p>
+            <p class="footer-tagline">I create; therefore I am woof</p>
+        </footer>
+    </div>
+
+    <script src="organic-nmr.js"></script>
+</body>
+</html>
