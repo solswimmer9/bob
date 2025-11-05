@@ -472,17 +472,23 @@
 
         let currentUser = null;
 
-        // Initialize - require authentication first
+        // Initialize - authentication is optional
         async function initAuth() {
             try {
-                // Require authentication
-                currentUser = await window.auth.requireAuth();
+                // Check if user is signed in (optional)
+                if (window.auth && window.auth.isUserSignedIn && window.auth.isUserSignedIn()) {
+                    currentUser = window.auth.getCurrentUser();
+                } else {
+                    console.log('User not signed in - past papers accessible without sign in');
+                    currentUser = null;
+                }
 
-                // Once authenticated, load papers
+                // Load papers regardless of auth status
                 await loadAndRenderPapers();
             } catch (error) {
-                console.error('Authentication error:', error);
-                // User will be redirected by requireAuth if not signed in
+                console.error('Initialization error:', error);
+                // Still load papers even if auth fails
+                await loadAndRenderPapers();
             }
         }
 
