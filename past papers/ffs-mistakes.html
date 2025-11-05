@@ -6,6 +6,15 @@
     <title>FFS - Frequent Failed Skills</title>
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="past-papers.css">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+    <!-- Firebase Configuration -->
+    <script src="../firebase-config.js"></script>
+    <script src="../auth.js"></script>
 </head>
 <body>
     <div class="ffs-container">
@@ -99,72 +108,136 @@
     <script>
         let mistakes = [];
         let currentFilter = 'all';
+        let currentUser = null;
 
-        // Initialize
-        function init() {
-            loadMistakes();
-            renderStats();
-            renderMistakes();
-        }
+        // Initialize - require authentication first
+        async function init() {
+            try {
+                // Require authentication
+                currentUser = await window.auth.requireAuth();
 
-        // Load mistakes from localStorage
-        function loadMistakes() {
-            const saved = localStorage.getItem('chemistry-ffs-mistakes');
-            if (saved) {
-                mistakes = JSON.parse(saved);
-            } else {
-                // Add example mistakes
-                mistakes = [
-                    {
-                        id: Date.now(),
-                        title: "Always round to 2 decimal places",
-                        type: "rounding",
-                        description: "Keep forgetting to round final answers to 2 d.p. in calculations. Lost marks on equilibrium constant question.",
-                        solution: "Write 'ROUND 2DP' at the top of every page. Check every numerical answer before moving on.",
-                        dateAdded: new Date().toISOString()
-                    }
-                ];
-                saveMistakes();
+                await loadMistakes();
+                renderStats();
+                renderMistakes();
+            } catch (error) {
+                console.error('Initialization error:', error);
+                // User will be redirected by requireAuth if not signed in
             }
         }
 
-        // Save mistakes to localStorage
-        function saveMistakes() {
-            localStorage.setItem('chemistry-ffs-mistakes', JSON.stringify(mistakes));
+        // Load mistakes from Firestore (user-specific)
+        async function loadMistakes() {
+            if (!currentUser) return;
+
+            try {
+                const snapshot = await db.collection('users').doc(currentUser.uid)
+                    .collection('ffsMistakes')
+                    .orderBy('dateAdded', 'desc')
+                    .get();
+
+                if (snapshot.empty) {
+                    // Add example mistakes for new users
+                    mistakes = [
+                        {
+                            id: Date.now(),
+                            title: "Always round to 2 decimal places",
+                            type: "rounding",
+                            description: "Keep forgetting to round final answers to 2 d.p. in calculations. Lost marks on equilibrium constant question.",
+                            solution: "Write 'ROUND 2DP' at the top of every page. Check every numerical answer before moving on.",
+                            dateAdded: new Date().toISOString()
+                        }
+                    ];
+                    await saveMistakes();
+                } else {
+                    mistakes = snapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                }
+            } catch (error) {
+                console.error('Error loading mistakes:', error);
+                alert('Failed to load mistakes. Please try again.');
+            }
+        }
+
+        // Save mistakes to Firestore (user-specific)
+        async function saveMistakes() {
+            if (!currentUser) return;
+
+            try {
+                // Save all mistakes (batch operation)
+                const batch = db.batch();
+                mistakes.forEach(mistake => {
+                    const docRef = db.collection('users').doc(currentUser.uid)
+                        .collection('ffsMistakes').doc(mistake.id.toString());
+                    batch.set(docRef, mistake);
+                });
+                await batch.commit();
+            } catch (error) {
+                console.error('Error saving mistakes:', error);
+                alert('Failed to save mistakes. Please try again.');
+            }
         }
 
         // Add mistake
-        function addMistake(event) {
+        async function addMistake(event) {
             event.preventDefault();
 
-            const newMistake = {
-                id: Date.now(),
-                title: document.getElementById('mistakeTitle').value,
-                type: document.getElementById('mistakeType').value,
-                description: document.getElementById('mistakeDescription').value,
-                solution: document.getElementById('mistakeSolution').value,
-                dateAdded: new Date().toISOString()
-            };
+            if (!currentUser) {
+                alert('You must be signed in to add mistakes.');
+                return;
+            }
 
-            mistakes.unshift(newMistake); // Add to beginning
-            saveMistakes();
+            try {
+                const newMistake = {
+                    id: Date.now(),
+                    title: document.getElementById('mistakeTitle').value,
+                    type: document.getElementById('mistakeType').value,
+                    description: document.getElementById('mistakeDescription').value,
+                    solution: document.getElementById('mistakeSolution').value,
+                    dateAdded: new Date().toISOString()
+                };
 
-            // Clear form
-            document.getElementById('mistakeTitle').value = '';
-            document.getElementById('mistakeDescription').value = '';
-            document.getElementById('mistakeSolution').value = '';
+                // Save to Firestore
+                await db.collection('users').doc(currentUser.uid)
+                    .collection('ffsMistakes').doc(newMistake.id.toString())
+                    .set(newMistake);
 
-            renderStats();
-            renderMistakes();
+                mistakes.unshift(newMistake); // Add to beginning
+
+                // Clear form
+                document.getElementById('mistakeTitle').value = '';
+                document.getElementById('mistakeDescription').value = '';
+                document.getElementById('mistakeSolution').value = '';
+
+                renderStats();
+                renderMistakes();
+            } catch (error) {
+                console.error('Error adding mistake:', error);
+                alert('Failed to add mistake. Please try again.');
+            }
         }
 
         // Delete mistake
-        function deleteMistake(id) {
+        async function deleteMistake(id) {
+            if (!currentUser) {
+                alert('You must be signed in to delete mistakes.');
+                return;
+            }
+
             if (confirm('Are you sure you want to delete this mistake?')) {
-                mistakes = mistakes.filter(m => m.id !== id);
-                saveMistakes();
-                renderStats();
-                renderMistakes();
+                try {
+                    // Delete from Firestore
+                    await db.collection('users').doc(currentUser.uid)
+                        .collection('ffsMistakes').doc(id.toString()).delete();
+
+                    mistakes = mistakes.filter(m => m.id !== id);
+                    renderStats();
+                    renderMistakes();
+                } catch (error) {
+                    console.error('Error deleting mistake:', error);
+                    alert('Failed to delete mistake. Please try again.');
+                }
             }
         }
 

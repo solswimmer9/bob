@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A Level Chemistry Past Paper Tracker</title>
     <link rel="stylesheet" href="../styles.css">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+    <!-- Firebase Configuration -->
+    <script src="../firebase-config.js"></script>
+    <script src="../auth.js"></script>
+
     <style>
         /* Additional styles specific to tracker page */
         body {
@@ -460,6 +470,22 @@
             }
         ];
 
+        let currentUser = null;
+
+        // Initialize - require authentication first
+        async function initAuth() {
+            try {
+                // Require authentication
+                currentUser = await window.auth.requireAuth();
+
+                // Once authenticated, load papers
+                await loadAndRenderPapers();
+            } catch (error) {
+                console.error('Authentication error:', error);
+                // User will be redirected by requireAuth if not signed in
+            }
+        }
+
         // Load and render papers
         async function loadAndRenderPapers() {
             try {
@@ -538,8 +564,8 @@
             `).join('');
         }
 
-        // Initialize
-        loadAndRenderPapers();
+        // Initialize with authentication
+        initAuth();
     </script>
 </body>
 </html>

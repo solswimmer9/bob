@@ -6,6 +6,15 @@
     <title>Performance Analytics</title>
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="past-papers.css">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+    <!-- Firebase Configuration -->
+    <script src="../firebase-config.js"></script>
+    <script src="../auth.js"></script>
 </head>
 <body>
     <div class="analytics-container">
@@ -37,39 +46,79 @@
             'E': 55
         };
 
-        let analytics = {};
+        let analytics = [];
+        let currentUser = null;
 
-        // Initialize
-        function init() {
-            loadAnalytics();
-            render();
+        // Initialize - require authentication first
+        async function init() {
+            try {
+                // Require authentication
+                currentUser = await window.auth.requireAuth();
+
+                await loadAnalytics();
+                render();
+            } catch (error) {
+                console.error('Initialization error:', error);
+                // User will be redirected by requireAuth if not signed in
+            }
         }
 
-        // Load analytics from localStorage
-        function loadAnalytics() {
-            const saved = localStorage.getItem('chemistry-analytics');
-            if (saved) {
-                analytics = JSON.parse(saved);
+        // Load analytics from Firestore (user-specific)
+        async function loadAnalytics() {
+            if (!currentUser) return;
+
+            try {
+                const snapshot = await db.collection('users').doc(currentUser.uid)
+                    .collection('paperProgress').get();
+
+                analytics = snapshot.docs.map(doc => {
+                    const data = doc.data();
+                    return {
+                        paperId: data.paperId,
+                        paper: {
+                            paperCode: data.paperCode,
+                            title: data.paperTitle,
+                            year: data.year,
+                            session: data.session
+                        },
+                        totalMarks: data.maxMarks || 0,
+                        earnedMarks: data.totalScore || 0,
+                        percentage: data.percentage || 0,
+                        questions: extractQuestionsFromTopics(data.topicScores, data.maxMarks)
+                    };
+                });
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+                alert('Failed to load analytics. Please try again.');
             }
+        }
+
+        // Helper function to convert topic scores to questions format for analytics
+        function extractQuestionsFromTopics(topicScores, maxMarks) {
+            if (!topicScores) return [];
+
+            return Object.entries(topicScores).map(([section, data]) => ({
+                topic: data.notes || section,
+                maxMarks: data.maxMarks || 0,
+                earnedMarks: data.score || 0
+            }));
         }
 
         // Calculate overall stats
         function calculateOverallStats() {
-            const papers = Object.values(analytics);
-
-            if (papers.length === 0) {
+            if (analytics.length === 0) {
                 return null;
             }
 
-            const totalMaxMarks = papers.reduce((sum, p) => sum + p.totalMarks, 0);
-            const totalEarnedMarks = papers.reduce((sum, p) => sum + p.earnedMarks, 0);
+            const totalMaxMarks = analytics.reduce((sum, p) => sum + p.totalMarks, 0);
+            const totalEarnedMarks = analytics.reduce((sum, p) => sum + p.earnedMarks, 0);
             const averagePercentage = totalMaxMarks > 0 ? (totalEarnedMarks / totalMaxMarks * 100) : 0;
 
             // Project to 300 marks
-            const projectedTotal = (totalEarnedMarks / totalMaxMarks) * 300;
+            const projectedTotal = totalMaxMarks > 0 ? (totalEarnedMarks / totalMaxMarks) * 300 : 0;
 
             return {
-                papersCompleted: papers.length,
+                papersCompleted: analytics.length,
                 totalMaxMarks,
                 totalEarnedMarks,
                 averagePercentage,
@@ -81,20 +130,22 @@
         function calculateTopicPerformance() {
             const topicStats = {};
 
-            Object.values(analytics).forEach(paper => {
-                paper.questions.forEach(q => {
-                    if (!topicStats[q.topic]) {
-                        topicStats[q.topic] = {
-                            maxMarks: 0,
-                            earnedMarks: 0,
-                            count: 0
-                        };
-                    }
+            analytics.forEach(paper => {
+                if (paper.questions && paper.questions.length > 0) {
+                    paper.questions.forEach(q => {
+                        if (!topicStats[q.topic]) {
+                            topicStats[q.topic] = {
+                                maxMarks: 0,
+                                earnedMarks: 0,
+                                count: 0
+                            };
+                        }
 
-                    topicStats[q.topic].maxMarks += parseFloat(q.maxMarks) || 0;
-                    topicStats[q.topic].earnedMarks += parseFloat(q.earnedMarks) || 0;
-                    topicStats[q.topic].count += 1;
-                });
+                        topicStats[q.topic].maxMarks += parseFloat(q.maxMarks) || 0;
+                        topicStats[q.topic].earnedMarks += parseFloat(q.earnedMarks) || 0;
+                        topicStats[q.topic].count += 1;
+                    });
+                }
             });
 
             // Convert to array and calculate percentages
@@ -216,7 +267,7 @@
                 <div class="papers-summary">
                     <h2>Papers Overview</h2>
                     <div class="papers-grid">
-                        ${Object.values(analytics).map(paper => {
+                        ${analytics.map(paper => {
                             const scoreClass = getScoreClass(parseFloat(paper.percentage));
                             return `
                                 <div class="paper-summary-card">

@@ -6,6 +6,15 @@
     <title>Paper Progress Tracker</title>
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="past-papers.css">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+    <!-- Firebase Configuration -->
+    <script src="../firebase-config.js"></script>
+    <script src="../auth.js"></script>
 </head>
 <body>
     <div class="tracker-container">
@@ -243,76 +252,128 @@
         let testDate = '';
         let overallFeedback = '';
         let actionPlan = '';
+        let currentUser = null;
 
-        // Initialize
-        function init() {
-            if (!paperId) {
-                alert('No paper selected!');
-                window.location.href = 'chemistry-tracker.html';
-                return;
+        // Initialize - require authentication first
+        async function init() {
+            try {
+                // Require authentication
+                currentUser = await window.auth.requireAuth();
+
+                if (!paperId) {
+                    alert('No paper selected!');
+                    window.location.href = 'chemistry-tracker.html';
+                    return;
+                }
+
+                currentPaper = papersData.find(p => p.id === paperId);
+                if (!currentPaper) {
+                    alert('Paper not found!');
+                    window.location.href = 'chemistry-tracker.html';
+                    return;
+                }
+
+                await loadProgress();
+                renderPaperDetails();
+                renderTopicsTable();
+                updateTotalScore();
+                setupEventListeners();
+            } catch (error) {
+                console.error('Initialization error:', error);
+                // User will be redirected by requireAuth if not signed in
             }
-
-            currentPaper = papersData.find(p => p.id === paperId);
-            if (!currentPaper) {
-                alert('Paper not found!');
-                window.location.href = 'chemistry-tracker.html';
-                return;
-            }
-
-            loadProgress();
-            renderPaperDetails();
-            renderTopicsTable();
-            updateTotalScore();
-            setupEventListeners();
         }
 
-        // Load progress from localStorage
-        function loadProgress() {
-            const saved = localStorage.getItem(`paper-feedback-${paperId}`);
-            if (saved) {
-                const data = JSON.parse(saved);
-                topicScores = data.topicScores || {};
-                studentName = data.studentName || '';
-                testDate = data.testDate || '';
-                overallFeedback = data.overallFeedback || '';
-                actionPlan = data.actionPlan || '';
+        // Load progress from Firestore (user-specific)
+        async function loadProgress() {
+            if (!currentUser) return;
 
-                // Populate form fields
-                document.getElementById('studentName').value = studentName;
-                document.getElementById('testDate').value = testDate;
-                document.getElementById('overallFeedback').value = overallFeedback;
-                document.getElementById('actionPlan').value = actionPlan;
-            } else {
-                // Initialize empty topic scores
-                topicScores = {};
+            try {
+                const docRef = db.collection('users').doc(currentUser.uid)
+                    .collection('paperProgress').doc(paperId);
+
+                const doc = await docRef.get();
+
+                if (doc.exists) {
+                    const data = doc.data();
+                    topicScores = data.topicScores || {};
+                    studentName = data.studentName || '';
+                    testDate = data.testDate || '';
+                    overallFeedback = data.overallFeedback || '';
+                    actionPlan = data.actionPlan || '';
+
+                    // Populate form fields
+                    document.getElementById('studentName').value = studentName;
+                    document.getElementById('testDate').value = testDate;
+                    document.getElementById('overallFeedback').value = overallFeedback;
+                    document.getElementById('actionPlan').value = actionPlan;
+                } else {
+                    // Initialize empty topic scores
+                    topicScores = {};
+                    currentPaper.topics.forEach(topic => {
+                        topicScores[topic.section] = {
+                            score: 0,
+                            notes: ''
+                        };
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading progress:', error);
+                alert('Failed to load your progress. Please try again.');
+            }
+        }
+
+        // Save progress to Firestore (user-specific)
+        async function saveProgress() {
+            if (!currentUser) {
+                alert('You must be signed in to save progress.');
+                return;
+            }
+
+            try {
+                // Get current values from form
+                studentName = document.getElementById('studentName').value;
+                testDate = document.getElementById('testDate').value;
+                overallFeedback = document.getElementById('overallFeedback').value;
+                actionPlan = document.getElementById('actionPlan').value;
+
+                // Calculate total score
+                let totalScore = 0;
                 currentPaper.topics.forEach(topic => {
-                    topicScores[topic.section] = {
-                        score: 0,
-                        notes: ''
-                    };
+                    const score = topicScores[topic.section];
+                    if (score && score.score) {
+                        totalScore += parseFloat(score.score);
+                    }
                 });
+
+                const percentage = currentPaper.maxMarks > 0 ? (totalScore / currentPaper.maxMarks * 100).toFixed(1) : 0;
+
+                const data = {
+                    paperId: paperId,
+                    paperCode: currentPaper.paperCode,
+                    paperTitle: currentPaper.title,
+                    year: currentPaper.year,
+                    session: currentPaper.session,
+                    topicScores,
+                    studentName,
+                    testDate,
+                    overallFeedback,
+                    actionPlan,
+                    totalScore,
+                    maxMarks: currentPaper.maxMarks,
+                    percentage,
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                // Save to Firestore
+                await db.collection('users').doc(currentUser.uid)
+                    .collection('paperProgress').doc(paperId).set(data);
+
+                alert('Progress saved successfully!');
+            } catch (error) {
+                console.error('Error saving progress:', error);
+                alert('Failed to save progress. Please try again.');
             }
-        }
-
-        // Save progress to localStorage
-        function saveProgress() {
-            // Get current values from form
-            studentName = document.getElementById('studentName').value;
-            testDate = document.getElementById('testDate').value;
-            overallFeedback = document.getElementById('overallFeedback').value;
-            actionPlan = document.getElementById('actionPlan').value;
-
-            const data = {
-                topicScores,
-                studentName,
-                testDate,
-                overallFeedback,
-                actionPlan,
-                lastUpdated: new Date().toISOString()
-            };
-
-            localStorage.setItem(`paper-feedback-${paperId}`, JSON.stringify(data));
-            alert('Progress saved successfully!');
         }
 
         // Render paper details
@@ -452,19 +513,34 @@
         }
 
         // Clear progress
-        function clearProgress() {
+        async function clearProgress() {
+            if (!currentUser) {
+                alert('You must be signed in to clear progress.');
+                return;
+            }
+
             if (confirm('Are you sure you want to clear all progress for this paper? This cannot be undone!')) {
-                topicScores = {};
-                currentPaper.topics.forEach(topic => {
-                    topicScores[topic.section] = { score: 0, notes: '' };
-                });
-                document.getElementById('studentName').value = '';
-                document.getElementById('testDate').value = '';
-                document.getElementById('overallFeedback').value = '';
-                document.getElementById('actionPlan').value = '';
-                localStorage.removeItem(`paper-feedback-${paperId}`);
-                renderTopicsTable();
-                updateTotalScore();
+                try {
+                    topicScores = {};
+                    currentPaper.topics.forEach(topic => {
+                        topicScores[topic.section] = { score: 0, notes: '' };
+                    });
+                    document.getElementById('studentName').value = '';
+                    document.getElementById('testDate').value = '';
+                    document.getElementById('overallFeedback').value = '';
+                    document.getElementById('actionPlan').value = '';
+
+                    // Delete from Firestore
+                    await db.collection('users').doc(currentUser.uid)
+                        .collection('paperProgress').doc(paperId).delete();
+
+                    renderTopicsTable();
+                    updateTotalScore();
+                    alert('Progress cleared successfully!');
+                } catch (error) {
+                    console.error('Error clearing progress:', error);
+                    alert('Failed to clear progress. Please try again.');
+                }
             }
         }
 
