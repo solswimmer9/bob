@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,6 +16,9 @@
     <!-- Firebase Configuration -->
     <script src="../firebase-config.js"></script>
     <script src="../auth.js"></script>
+
+    <!-- Past Papers Data -->
+    <script src="papers.js"></script>
 </head>
 <body>
     <div class="tracker-container">
@@ -88,8 +92,8 @@
         const urlParams = new URLSearchParams(window.location.search);
         const paperId = urlParams.get('id');
 
-        // Past papers data (embedded)
-        const papersData = [
+        // Past papers data (embedded as fallback)
+        const papersDataFallback = [
             {
                 "id": "aqa-74051-jun24",
                 "examBoard": "AQA",
@@ -253,10 +257,36 @@
         let overallFeedback = '';
         let actionPlan = '';
         let currentUser = null;
+        let papersData = null;
+
+        // Load papers data from JSON file or fallback to embedded data
+        async function loadPapersData() {
+            try {
+                // Try to fetch from JSON file first (works with local server)
+                const response = await fetch('data/PastPapers.json');
+                const jsonData = await response.json();
+
+                // Transform JSON data to match the embedded structure with topics breakdown
+                papersData = jsonData.map(paper => {
+                    // Find matching fallback paper to get detailed topics structure
+                    const fallbackPaper = papersDataFallback.find(fp => fp.id === paper.id);
+                    return fallbackPaper || paper;
+                });
+
+                console.log('Loaded papers data from JSON file');
+            } catch (error) {
+                // Fallback to embedded data (works with file:// protocol)
+                console.log('Using embedded fallback data (fetch failed, likely due to file:// protocol)');
+                papersData = papersDataFallback;
+            }
+        }
 
         // Initialize - require authentication first
         async function init() {
             try {
+                // Load papers data first
+                await loadPapersData();
+
                 // Check if user is signed in (optional)
                 if (window.auth && window.auth.isUserSignedIn && window.auth.isUserSignedIn()) {
                     currentUser = window.auth.getCurrentUser();
