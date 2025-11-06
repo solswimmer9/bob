@@ -294,6 +294,8 @@
     </div>
 
     <script>
+        console.log('✅ Script tag is loading...');
+
         // Past papers data - embedded for compatibility with file:// protocol
         const papersData = [
             {
@@ -470,17 +472,19 @@
             }
         ];
 
-        let currentUser = null;
+        console.log('✅ Papers data loaded:', papersData.length, 'papers');
+
+        // currentUser is already declared in auth.js, so we don't need to declare it again
 
         // Initialize - authentication is optional
         async function initAuth() {
             try {
-                // Check if user is signed in (optional)
+                // Check if user is signed in (optional - currentUser is set by auth.js)
                 if (window.auth && window.auth.isUserSignedIn && window.auth.isUserSignedIn()) {
-                    currentUser = window.auth.getCurrentUser();
+                    // currentUser is already set by auth.js
+                    console.log('User is signed in - currentUser available');
                 } else {
                     console.log('User not signed in - past papers accessible without sign in');
-                    currentUser = null;
                 }
 
                 // Load papers regardless of auth status
@@ -494,22 +498,34 @@
 
         // Load and render papers
         async function loadAndRenderPapers() {
+            console.log('🔄 Starting loadAndRenderPapers...');
             try {
                 // Try to fetch from JSON file first (works with local server)
+                console.log('📡 Fetching data/PastPapers.json...');
                 const response = await fetch('data/PastPapers.json');
+                console.log('✅ Fetch response received:', response.status);
                 const papers = await response.json();
+                console.log('✅ JSON parsed successfully. Papers count:', papers.length);
 
                 // Sort and render
                 sortAndRenderPapers(papers);
             } catch (error) {
                 // Fallback to embedded data (works with file:// protocol)
-                console.log('Using embedded data (fetch failed, likely due to file:// protocol)');
+                console.error('❌ Fetch failed:', error);
+                console.log('🔄 Using embedded data (fetch failed, likely due to file:// protocol)');
+                console.log('📦 Embedded papers count:', papersData.length);
                 sortAndRenderPapers(papersData);
             }
         }
 
         // Sort and render papers
         function sortAndRenderPapers(papers) {
+            console.log('🔄 Sorting and rendering papers...', papers.length);
+            if (!papers || papers.length === 0) {
+                console.error('❌ No papers to render!');
+                return;
+            }
+
             // Sort papers by year (most recent first) and then by session
             papers.sort((a, b) => {
                 if (b.year !== a.year) return b.year - a.year;
@@ -524,7 +540,13 @@
 
         // Render papers
         function renderPapers(papers) {
+            console.log('🎨 Rendering papers to DOM...', papers.length);
             const grid = document.getElementById('papersGrid');
+
+            if (!grid) {
+                console.error('❌ Papers grid element not found!');
+                return;
+            }
 
             grid.innerHTML = papers.map(paper => `
                 <div class="paper-card">
@@ -568,19 +590,21 @@
                     </div>
                 </div>
             `).join('');
+
+            console.log('✅ Papers rendered successfully! Grid HTML length:', grid.innerHTML.length);
         }
 
-        // Initialize with authentication
-        initAuth();
+        // Force immediate render first, then try auth
+        console.log('🚀 Forcing immediate render of papers...');
+        console.log('📍 Grid element exists?', document.getElementById('papersGrid') !== null);
+        console.log('📦 Papers data:', papersData);
+        sortAndRenderPapers(papersData);
 
-        // Also render immediately as fallback (in case auth is slow/fails)
-        setTimeout(() => {
-            const grid = document.getElementById('papersGrid');
-            if (!grid || grid.innerHTML.trim() === '') {
-                console.log('Papers not loaded yet, rendering fallback...');
-                sortAndRenderPapers(papersData);
-            }
-        }, 1000);
+        // Then initialize with authentication in background
+        console.log('🚀 Starting authentication...');
+        initAuth().catch(error => {
+            console.error('InitAuth failed:', error);
+        });
     </script>
 </body>
 </html>
