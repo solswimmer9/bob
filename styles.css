@@ -33,7 +33,7 @@ body {
     padding: 0 24px;
 }
 
-/* Hero Section */
+/* Hero Section - For Landing Page */
 .hero {
     min-height: 100vh;
     display: flex;
@@ -41,6 +41,37 @@ body {
     justify-content: center;
     position: relative;
     overflow: hidden;
+}
+
+/* Compact Page Header - For Content Pages */
+.page-header {
+    padding: 40px 0 32px;
+    position: relative;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-bg);
+}
+
+.page-header .hero-content {
+    text-align: center;
+}
+
+.page-header .logo {
+    display: inline-block;
+    margin-bottom: 16px;
+}
+
+.page-header .hero-title {
+    font-size: clamp(32px, 5vw, 48px);
+    margin-bottom: 12px;
+}
+
+.page-header .hero-subtitle {
+    font-size: clamp(16px, 2vw, 18px);
+    margin-bottom: 24px;
+}
+
+.page-header .floating-elements {
+    display: none;
 }
 
 .hero-content {
@@ -249,7 +280,7 @@ body {
 
 /* Demo Section */
 .demo-section {
-    padding: 120px 0;
+    padding: 48px 0 80px;
     text-align: center;
 }
 
@@ -782,6 +813,19 @@ body {
 @media (max-width: 768px) {
     .hero {
         min-height: 80vh;
+    }
+
+    .page-header {
+        padding: 32px 0 24px;
+    }
+
+    .page-header .hero-title {
+        font-size: clamp(28px, 6vw, 36px);
+    }
+
+    .page-header .hero-subtitle {
+        font-size: 15px;
+        margin-bottom: 20px;
     }
 
     .features,

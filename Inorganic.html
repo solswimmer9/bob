@@ -16,37 +16,82 @@
     <div class="user-profile"></div>
 
     <div class="container">
-        <!-- Hero Section -->
-        <header class="hero">
+        <!-- Compact Page Header -->
+        <header class="page-header">
             <div class="hero-content">
                 <div class="logo">
-                    <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                    <svg width="48" height="48" viewBox="0 0 60 60" fill="none">
                         <path d="M10 30L20 10L30 30" stroke="currentColor" stroke-width="3" fill="none"/>
                         <line x1="14" y1="24" x2="26" y2="24" stroke="currentColor" stroke-width="3"/>
                         <path d="M30 30L40 10L50 30" stroke="currentColor" stroke-width="3" fill="none"/>
                         <line x1="34" y1="24" x2="46" y2="24" stroke="currentColor" stroke-width="3"/>
                     </svg>
                 </div>
-                <h1 class="hero-title">
-                    <span class="fade-in-up">Inorganic</span>
-                    <span class="fade-in-up delay-1">Chemistry</span>
-                </h1>
-                <p class="hero-subtitle fade-in-up delay-2">Learn periodic trends and compound properties</p>
-                <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-                    <a href="#topics" class="cta-button fade-in-up delay-3">Browse Topics</a>
-                    <a href="index.html" class="cta-button fade-in-up delay-3">Back to Home</a>
+                <h1 class="hero-title">Inorganic Chemistry</h1>
+                <p class="hero-subtitle">Learn periodic trends and compound properties</p>
+                <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                    <a href="#topics" class="nav-btn primary">Browse Topics</a>
+                    <a href="index.html" class="nav-btn">Back to Home</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Flashcard Section with Spaced Repetition -->
+        <section class="demo-section">
+            <h2 class="section-title">Inorganic Chemistry Flashcards</h2>
+            <p class="due-cards-info" id="progress">Loading cards...</p>
+
+            <div class="flashcard-container">
+                <div class="flashcard" id="flashcard">
+                    <div class="flashcard-inner">
+                        <div class="flashcard-front">
+                            <span class="card-label">Question</span>
+                            <h3 id="question">Loading...</h3>
+                        </div>
+                        <div class="flashcard-back">
+                            <span class="card-label">Answer</span>
+                            <h3 id="answer">Loading...</h3>
+                            <p class="card-explanation" id="explanation"></p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Floating Elements -->
-            <div class="floating-elements">
-                <div class="float-element element-1">Fe³⁺</div>
-                <div class="float-element element-2">Cl₂</div>
-                <div class="float-element element-3">Mg</div>
-                <div class="float-element element-4">Cu²⁺</div>
-                <div class="float-element element-5">Br⁻</div>
+            <!-- Show Answer Button -->
+            <div class="card-controls">
+                <button class="show-answer-btn" id="showAnswerBtn">Show Answer</button>
             </div>
-        </header>
+
+            <!-- Difficulty Rating Buttons (hidden initially) - Anki-style 4 buttons -->
+            <div class="difficulty-buttons" id="difficultyButtons" style="display: none;">
+                <button class="difficulty-btn again-btn" data-difficulty="again">
+                    <span class="btn-label">Again</span>
+                    <span class="btn-interval">1m</span>
+                </button>
+                <button class="difficulty-btn hard-btn" data-difficulty="hard">
+                    <span class="btn-label">Hard</span>
+                    <span class="btn-interval">10m</span>
+                </button>
+                <button class="difficulty-btn good-btn" data-difficulty="good">
+                    <span class="btn-label">Good</span>
+                    <span class="btn-interval">1d</span>
+                </button>
+                <button class="difficulty-btn easy-btn" data-difficulty="easy">
+                    <span class="btn-label">Easy</span>
+                    <span class="btn-interval">4d</span>
+                </button>
+            </div>
+
+            <!-- Session Progress -->
+            <div class="session-progress" id="sessionProgress">
+                <span class="progress-text">Card <span id="currentCardNum">1</span> of <span id="totalDueCards">0</span></span>
+            </div>
+
+            <!-- Keyboard Shortcuts Hint -->
+            <div class="keyboard-hint" style="margin-top: 20px; text-align: center; opacity: 0.6; font-size: 0.9em;">
+                <p>Keyboard shortcuts: Space/Enter to show answer | 1 = Again | 2 = Hard | 3 = Good | 4 = Easy</p>
+            </div>
+        </section>
 
         <!-- Topics Section -->
         <section class="features" id="topics" style="padding-top: 60px;">
@@ -103,16 +148,16 @@
         <section class="stats-section">
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-number">80+</div>
+                    <div class="stat-number">12</div>
                     <div class="stat-label">Inorganic Cards</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalDueDisplay">-</div>
+                    <div class="stat-label">Due Today</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number">4</div>
                     <div class="stat-label">Main Topics</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">10</div>
-                    <div class="stat-label">Subtopics</div>
                 </div>
             </div>
         </section>
@@ -129,8 +174,11 @@
     <script src="auth.js"></script>
     <script src="firestore.js"></script>
 
-    <!-- Main Script -->
-    <script src="script.js"></script>
+    <!-- Firebase-powered Spaced Repetition System -->
+    <script src="spaced-repetition-firebase.js"></script>
+
+    <!-- Inorganic Chemistry Flashcard Data -->
+    <script src="Inorganic.js"></script>
 
     <!-- Auth state handler for this page -->
     <script>
