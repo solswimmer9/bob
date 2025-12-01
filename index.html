@@ -300,6 +300,23 @@
                     <h3>Past Paper Tracker</h3>
                     <p>Track your progress and performance on past papers</p>
                 </a>
+
+                <a href="flashcard-analytics.html" class="feature-card" style="border: 2px solid #28a745;">
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <rect x="5" y="10" width="30" height="20" rx="2" stroke="currentColor" stroke-width="2"/>
+                            <path d="M5 18h30" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="12" cy="22" r="2" fill="currentColor"/>
+                            <circle cx="20" cy="20" r="3" fill="currentColor"/>
+                            <circle cx="28" cy="24" r="2" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3>Study Analytics</h3>
+                    <p>View detailed statistics and track your learning progress</p>
+                    <div id="dueCardsPreview" style="margin-top: 12px; font-size: 14px; color: #28a745; font-weight: 600; display: none;">
+                        <span id="dueCardsCount">0</span> cards due today
+                    </div>
+                </a>
             </div>
         </section>
 
@@ -434,6 +451,47 @@
                     </div>
                 `;
                 userProfile.style.display = 'flex';
+            }
+
+            // Load and display cards due today
+            loadCardsDueToday(user);
+        }
+
+        // Load cards due today from Firestore
+        async function loadCardsDueToday(user) {
+            try {
+                const snapshot = await db.collection('users')
+                    .doc(user.uid)
+                    .collection('flashcards')
+                    .get();
+
+                let dueCount = 0;
+                const now = new Date();
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.nextReview) {
+                        const nextReview = data.nextReview.toDate ? data.nextReview.toDate() : new Date(data.nextReview);
+                        if (nextReview <= now) {
+                            dueCount++;
+                        }
+                    }
+                });
+
+                // Update the counter
+                const dueCardsPreview = document.getElementById('dueCardsPreview');
+                const dueCardsCount = document.getElementById('dueCardsCount');
+
+                if (dueCardsPreview && dueCardsCount) {
+                    dueCardsCount.textContent = dueCount;
+                    if (dueCount > 0) {
+                        dueCardsPreview.style.display = 'block';
+                    }
+                }
+
+                console.log(`${dueCount} cards due today`);
+            } catch (error) {
+                console.error('Error loading cards due:', error);
             }
         }
 
