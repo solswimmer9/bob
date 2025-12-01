@@ -714,6 +714,36 @@ class FirebaseStudyTracker {
   }
 }
 
+// Load flashcards from Firestore or fallback to JSON array
+async function loadFlashcardsFromFirestore(topic, fallbackArray) {
+  try {
+    // Try to load from Firestore
+    const snapshot = await db.collection('flashcards')
+      .where('topic', '==', topic)
+      .orderBy('createdAt', 'desc')
+      .get();
+
+    if (snapshot.empty) {
+      console.log(`No flashcards in Firestore for ${topic}, using fallback array`);
+      return fallbackArray;
+    }
+
+    const firestoreCards = snapshot.docs.map(doc => ({
+      id: doc.id,
+      question: doc.data().question,
+      answer: doc.data().answer,
+      explanation: doc.data().explanation || ''
+    }));
+
+    console.log(`Loaded ${firestoreCards.length} flashcards from Firestore for ${topic}`);
+    return firestoreCards;
+  } catch (error) {
+    console.error(`Error loading flashcards from Firestore for ${topic}:`, error);
+    console.log('Falling back to JSON array');
+    return fallbackArray;
+  }
+}
+
 // Initialize function for Firebase-powered flashcards
 async function initializeFirebaseFlashcards(topic, flashcardsArray) {
   // Check if user is signed in (but don't require it)
@@ -723,7 +753,16 @@ async function initializeFirebaseFlashcards(topic, flashcardsArray) {
     console.log('User not signed in - flashcards will work but progress will not be saved');
   }
 
-  const srManager = new FirebaseSpacedRepetitionManager(topic, flashcardsArray);
+  // Try to load flashcards from Firestore, fallback to JSON array
+  let flashcards = flashcardsArray;
+
+  if (typeof db !== 'undefined') {
+    flashcards = await loadFlashcardsFromFirestore(topic, flashcardsArray);
+  } else {
+    console.log('Firestore not available, using fallback flashcard array');
+  }
+
+  const srManager = new FirebaseSpacedRepetitionManager(topic, flashcards);
   const session = new FirebaseFlashcardSession(srManager);
 
   // Start tracking session

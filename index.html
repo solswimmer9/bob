@@ -385,7 +385,11 @@
             <p class="footer-tagline">I create; therefore I am woof</p>
             <div class="footer-links" style="margin-top: 20px; font-size: 0.9em;">
                 <a href="privacy.html" style="color: #2e5cff; text-decoration: none; margin-right: 15px;">Privacy Policy</a>
-                <a href="terms.html" style="color: #2e5cff; text-decoration: none;">Terms of Service</a>
+                <a href="terms.html" style="color: #2e5cff; text-decoration: none; margin-right: 15px;">Terms of Service</a>
+                <span id="adminLinks" style="display: none;">
+                    <a href="admin.html" style="color: #28a745; text-decoration: none; margin-right: 15px;">Admin Panel</a>
+                    <a href="migrate-flashcards.html" style="color: #ffc107; text-decoration: none;">Migrate Flashcards</a>
+                </span>
             </div>
         </footer>
     </div>
@@ -413,6 +417,12 @@
             signInContainer.style.display = 'none';
             browseTopicsContainer.style.display = 'block';
 
+            // Show admin links in footer
+            const adminLinks = document.getElementById('adminLinks');
+            if (adminLinks) {
+                adminLinks.style.display = 'inline';
+            }
+
             // Update user profile in the top right corner
             const userProfile = document.querySelector('.user-profile');
             if (userProfile) {
@@ -433,6 +443,12 @@
             // Update UI
             signInContainer.style.display = 'block';
             browseTopicsContainer.style.display = 'none';
+
+            // Hide admin links
+            const adminLinks = document.getElementById('adminLinks');
+            if (adminLinks) {
+                adminLinks.style.display = 'none';
+            }
 
             // Hide user profile
             const userProfile = document.querySelector('.user-profile');

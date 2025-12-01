@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Migrate Flashcards to Firestore</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <style>
+        .migrate-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .migrate-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .migrate-header h1 {
+            color: #2e5cff;
+            margin-bottom: 12px;
+        }
+
+        .migrate-header p {
+            color: #666;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .warning-box h3 {
+            color: #856404;
+            margin-top: 0;
+        }
+
+        .warning-box ul {
+            margin: 12px 0;
+            padding-left: 24px;
+        }
+
+        .info-box {
+            background: #d1ecf1;
+            border: 2px solid #17a2b8;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .info-box h3 {
+            color: #0c5460;
+            margin-top: 0;
+        }
+
+        .migrate-section {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .migrate-section h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #2e5cff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1e4cef;
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2e5cff, #1e4cef);
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .log-container {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .log-entry {
+            padding: 4px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .log-entry.success {
+            color: #28a745;
+        }
+
+        .log-entry.error {
+            color: #dc3545;
+        }
+
+        .log-entry.info {
+            color: #17a2b8;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2e5cff;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #2e5cff;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="migrate-container">
+        <a href="admin.html" class="back-link">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M12 4L6 10L12 16" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            Back to Admin Panel
+        </a>
+
+        <div class="migrate-header">
+            <h1>Migrate Flashcards to Firestore</h1>
+            <p>One-time migration of existing JSON flashcards to Firestore database</p>
+        </div>
+
+        <div class="warning-box">
+            <h3>⚠️ Important - Read Before Migrating</h3>
+            <ul>
+                <li>This is a ONE-TIME operation to move your existing flashcards to Firestore</li>
+                <li>After migration, you can manage flashcards using the Admin Panel</li>
+                <li>Your existing JSON files will NOT be modified</li>
+                <li>If flashcards already exist in Firestore, duplicates will be created</li>
+                <li>You must be signed in to perform migration</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <h3>📊 Current Flashcard Count</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="organicCount">0</div>
+                    <div class="stat-label">Organic</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="physicalCount">0</div>
+                    <div class="stat-label">Physical</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="inorganicCount">0</div>
+                    <div class="stat-label">Inorganic</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalCount">0</div>
+                    <div class="stat-label">Total</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="migrate-section">
+            <h2>Migration Steps</h2>
+            <p>This migration will:</p>
+            <ol>
+                <li>Load all flashcards from Organic.js, physical.js, and Inorganic.js</li>
+                <li>Import them into Firestore with proper topic categorization</li>
+                <li>Preserve all questions, answers, and explanations</li>
+                <li>Set timestamps for tracking</li>
+            </ol>
+
+            <div style="margin-top: 24px;">
+                <button class="btn btn-primary" id="startMigrationBtn" onclick="startMigration()">
+                    Start Migration
+                </button>
+            </div>
+
+            <div class="progress-container" id="progressContainer" style="display: none;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%">0%</div>
+                </div>
+                <div id="progressText" style="text-align: center; color: #666;"></div>
+            </div>
+
+            <div id="logContainer" class="log-container" style="display: none;"></div>
+        </div>
+
+        <div class="migrate-section" id="completionSection" style="display: none;">
+            <h2>✅ Migration Complete!</h2>
+            <p>Your flashcards have been successfully migrated to Firestore.</p>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="migratedCount">0</div>
+                    <div class="stat-label">Cards Migrated</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="errorCount">0</div>
+                    <div class="stat-label">Errors</div>
+                </div>
+            </div>
+            <div style="margin-top: 24px;">
+                <a href="admin.html" class="btn btn-success">Go to Admin Panel</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Configuration and Auth -->
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+
+    <!-- Load existing flashcard data -->
+    <script src="Organic.js"></script>
+    <script src="physical.js"></script>
+    <script src="Inorganic.js"></script>
+
+    <script>
+        let migrationInProgress = false;
+
+        // Initialize - require authentication
+        async function init() {
+            try {
+                // Require authentication
+                const user = await window.auth.requireAuth();
+                console.log('Migration page - user authenticated:', user.email);
+
+                // Count existing flashcards from JS files
+                updateCountsFromJS();
+            } catch (error) {
+                console.error('Initialization error:', error);
+                // User will be redirected by requireAuth if not signed in
+            }
+        }
+
+        // Update counts from loaded JS files
+        function updateCountsFromJS() {
+            const organicCount = typeof organicFlashcards !== 'undefined' ? organicFlashcards.length : 0;
+            const physicalCount = typeof physicalFlashcards !== 'undefined' ? physicalFlashcards.length : 0;
+            const inorganicCount = typeof inorganicFlashcards !== 'undefined' ? inorganicFlashcards.length : 0;
+
+            document.getElementById('organicCount').textContent = organicCount;
+            document.getElementById('physicalCount').textContent = physicalCount;
+            document.getElementById('inorganicCount').textContent = inorganicCount;
+            document.getElementById('totalCount').textContent = organicCount + physicalCount + inorganicCount;
+        }
+
+        // Start migration
+        async function startMigration() {
+            if (migrationInProgress) {
+                return;
+            }
+
+            if (!confirm('Are you sure you want to migrate all flashcards to Firestore?\n\nThis will import all cards from your JS files into the database.')) {
+                return;
+            }
+
+            migrationInProgress = true;
+            document.getElementById('startMigrationBtn').disabled = true;
+            document.getElementById('progressContainer').style.display = 'block';
+            document.getElementById('logContainer').style.display = 'block';
+
+            clearLog();
+            addLog('Starting migration...', 'info');
+
+            try {
+                // Prepare flashcard collections
+                const collections = [];
+
+                if (typeof organicFlashcards !== 'undefined' && organicFlashcards.length > 0) {
+                    collections.push({ topic: 'organic', cards: organicFlashcards });
+                }
+
+                if (typeof physicalFlashcards !== 'undefined' && physicalFlashcards.length > 0) {
+                    collections.push({ topic: 'physical', cards: physicalFlashcards });
+                }
+
+                if (typeof inorganicFlashcards !== 'undefined' && inorganicFlashcards.length > 0) {
+                    collections.push({ topic: 'inorganic', cards: inorganicFlashcards });
+                }
+
+                let totalCards = collections.reduce((sum, col) => sum + col.cards.length, 0);
+                let processedCards = 0;
+                let successCount = 0;
+                let errorCount = 0;
+
+                addLog(`Found ${totalCards} flashcards to migrate`, 'info');
+
+                // Process each collection
+                for (const collection of collections) {
+                    addLog(`Migrating ${collection.cards.length} ${collection.topic} flashcards...`, 'info');
+
+                    for (const card of collection.cards) {
+                        try {
+                            await db.collection('flashcards').add({
+                                topic: collection.topic,
+                                question: card.question || '',
+                                answer: card.answer || '',
+                                explanation: card.explanation || '',
+                                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                            });
+
+                            successCount++;
+                            processedCards++;
+                            updateProgress(processedCards, totalCards);
+                        } catch (error) {
+                            console.error('Error migrating card:', card, error);
+                            addLog(`Error migrating card: ${card.question} - ${error.message}`, 'error');
+                            errorCount++;
+                            processedCards++;
+                            updateProgress(processedCards, totalCards);
+                        }
+                    }
+
+                    addLog(`✓ Completed ${collection.topic} (${collection.cards.length} cards)`, 'success');
+                }
+
+                addLog(`Migration complete! ${successCount} cards migrated, ${errorCount} errors`, 'success');
+
+                // Show completion section
+                document.getElementById('migratedCount').textContent = successCount;
+                document.getElementById('errorCount').textContent = errorCount;
+                document.getElementById('completionSection').style.display = 'block';
+
+            } catch (error) {
+                console.error('Migration error:', error);
+                addLog(`Fatal error: ${error.message}`, 'error');
+            } finally {
+                migrationInProgress = false;
+            }
+        }
+
+        // Update progress bar
+        function updateProgress(current, total) {
+            const percentage = Math.round((current / total) * 100);
+            const fill = document.getElementById('progressFill');
+            fill.style.width = percentage + '%';
+            fill.textContent = percentage + '%';
+
+            document.getElementById('progressText').textContent = `${current} of ${total} cards processed`;
+        }
+
+        // Add log entry
+        function addLog(message, type = 'info') {
+            const logContainer = document.getElementById('logContainer');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logContainer.appendChild(entry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        // Clear log
+        function clearLog() {
+            document.getElementById('logContainer').innerHTML = '';
+        }
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>
